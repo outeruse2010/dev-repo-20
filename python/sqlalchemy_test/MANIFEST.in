@@ -1,0 +1,4 @@
+include README
+include License
+include resources/*.*
+#recursive-include resources/ *
