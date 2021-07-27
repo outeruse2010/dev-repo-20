@@ -1,0 +1,2 @@
+pip install pyyaml sqlalchemy psycopg2 numpy pandas
+#The PostgreSQL dialect uses psycopg2 as the default DBAPI.
