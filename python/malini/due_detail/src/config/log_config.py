@@ -5,15 +5,18 @@
 # ********************************
 
 
-from os import path
-import logging.config
-import yaml
+import logging
 
-log_file = path.abspath(path.join(path.dirname(__file__), '..', 'resources', 'log.yaml'))
-with open(log_file, 'r') as f:
-    log_cfg = yaml.safe_load(f.read())
+def logger():
+    log = logging.getLogger(__name__)
+    if not log.hasHandlers():
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('''
+        %(asctime)s %(levelname)s %(filename)s : %(funcName)s: %(lineno)d :: %(message)s
+        ''')
+        handler.setFormatter(formatter)
+        log.addHandler(handler)
+        log.setLevel(logging.INFO)
+    return log
 
-logging.config.dictConfig(log_cfg)
-
-log = logging.getLogger('dev')
-log.setLevel(logging.INFO)
+log = logger()

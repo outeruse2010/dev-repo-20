@@ -12,8 +12,11 @@ CREATE TABLE malini_schema.cus_area(
    area_id uuid  DEFAULT uuid_generate_v4(),
    area_name text not null,
    description text,
-   updated_on timestamp default now(),
+   created_on timestamp default now(),
+   created_by text,
+   updated_on timestamp,
    updated_by text,
+   deleted char(1) default 'N',
    PRIMARY KEY(area_id),
    UNIQUE(area_name)
 );
@@ -32,8 +35,11 @@ CREATE TABLE malini_schema.customer(
    email text,
    phone text,
    comments text,
-   updated_on timestamp default now(),
+   created_on timestamp default now(),
+   created_by text,
+   updated_on timestamp,
    updated_by text,
+   deleted char(1) default 'N',
    PRIMARY KEY(cus_id),
    UNIQUE(cus_sr, first_name, last_name)
 );
@@ -47,7 +53,10 @@ CREATE TABLE malini_schema.cus_due(
    credit_amt decimal DEFAULT 0,
    due_amt decimal DEFAULT 0,
    comments text,
-   updated_on timestamp default now(),
+   created_on timestamp default now(),
+   created_by text,
+   updated_on timestamp,
    updated_by text,
+   deleted char(1) default 'N',
    PRIMARY KEY(cus_due_id)
 );

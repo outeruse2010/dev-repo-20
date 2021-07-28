@@ -25,6 +25,6 @@ def db_engine():
     # print(f'config: {config_dict}')
     con_url = f'''postgresql://{db['user']}:{db['password']}@{db['host']}:{db['port']}/{db['database']}'''
     engine = create_engine(con_url)
-    print(f'engine: {engine}')
+    # print(f'engine: {engine}')
     return engine
 
