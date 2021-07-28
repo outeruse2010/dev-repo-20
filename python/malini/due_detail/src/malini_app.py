@@ -15,9 +15,9 @@ CORS(app)
 def test():
     return 'Hello World!!!'
 
-# =============== Person detail Api localhost:5000/graphql_person_detail    =====================
+# =============== cus_area detail Api localhost:5000/graphql_cus_area_list    =====================
 # query to run on graphiql
-# query test_query{  person(firstName: "ABC", age: 22) {firstName, age}   }
+# query cus_area_query{ cusAreas { area_id, area_name, description, created_on, created_by, updated_on, updated_by, deleted}}
 from src.module.customer.service.cus_area_service import cus_area_schema
 app.add_url_rule('/graphql_cus_area_list', view_func= GraphQLView.as_view('grapghql', schema= cus_area_schema(), graphiql=True))
 
