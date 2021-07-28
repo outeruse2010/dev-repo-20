@@ -24,7 +24,7 @@ import Customers from '../content/customer/Customers';
 const drawerWidth = 240;
 
 const menu_items = [
-  {"title": "Customers","component": Customers, "path": "/customers", "icon": "", "divide": false}
+  {"title": "Customers","component": Customers, "path": "/", "icon": "", "divide": false}
   ,{"title": "Due Detail","component": DueDetail, "path": "/due_detail", "icon": "", "divide": false}
                     ];
 
@@ -33,13 +33,6 @@ export default function AppMenu() {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
-  const onMenuOpen = () => {
-    setOpen(true);
-  };
-
-  const onMenuClose = () => {
-    setOpen(false);
-  };
 
   return (
     
@@ -48,7 +41,7 @@ export default function AppMenu() {
 
       <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: open, })} >
         <Toolbar>
-          <IconButton  onClick={onMenuOpen} color="inherit" aria-label="open drawer"  edge="start" className={clsx(classes.menuButton, open && classes.hide)} >
+          <IconButton  onClick={() => setOpen(true)} color="inherit" aria-label="open drawer"  edge="start" className={clsx(classes.menuButton, open && classes.hide)} >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap> Malini </Typography>
@@ -57,7 +50,7 @@ export default function AppMenu() {
       <Router>
       <Drawer className={classes.drawer} variant="persistent" anchor="left" open={open} classes={{ paper: classes.drawerPaper}} >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={onMenuClose}>
+          <IconButton onClick={() => setOpen(false)}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </div>
@@ -87,11 +80,6 @@ export default function AppMenu() {
     
   );
 }
-
-function Home(){
-  return <div> Test Home</div>
-}
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
