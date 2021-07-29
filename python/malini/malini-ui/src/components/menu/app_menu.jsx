@@ -20,11 +20,13 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import DueDetail from '../content/dues/due_detail';
 import Customers from '../content/customer/Customers';
+import CustomerArea from '../content/customer/CustomerArea';
 
 const drawerWidth = 240;
 
 const menu_items = [
-  {"title": "Customers","component": Customers, "path": "/", "icon": "", "divide": false}
+  {"title": "Customer Area","component": CustomerArea, "path": "/customer_areas", "icon": "", "divide": false}
+  ,{"title": "Customers","component": Customers, "path": "/", "icon": "", "divide": false}
   ,{"title": "Due Detail","component": DueDetail, "path": "/due_detail", "icon": "", "divide": false}
                     ];
 
