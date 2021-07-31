@@ -16,8 +16,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+
 import DueDetail from '../content/dues/due_detail';
 import Customers from '../content/customer/Customers';
 import CustomerArea from '../content/customer/CustomerArea';
@@ -30,23 +29,22 @@ const menu_items = [
   ,{"title": "Due Detail","component": DueDetail, "path": "/due_detail", "icon": "", "divide": false}
                     ];
 
-export default function AppMenu() {
+function AppMenu() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-
-
+  
   return (
     
     <div className={classes.root}>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
 
       <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: open, })} >
         <Toolbar>
           <IconButton  onClick={() => setOpen(true)} color="inherit" aria-label="open drawer"  edge="start" className={clsx(classes.menuButton, open && classes.hide)} >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap> Malini </Typography>
+          <Typography variant="h6" noWrap className={classes.title_color}> Malini </Typography>
         </Toolbar>
       </AppBar>
       <Router>
@@ -60,10 +58,10 @@ export default function AppMenu() {
         <List>
           {menu_items.map((mnu, index) => 
            <div key={index}>
-              <ListItem button key={mnu.title}>
+              <ListItem button key={mnu.title} >
                 <Link to={mnu.path} style={{textDecoration: 'inherit'}}>
                   {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>    */ }
-                  <ListItemText primary={mnu.title} />
+                  <ListItemText primary={mnu.title} button='true'/>
                 </Link>
               </ListItem>
               {mnu.divide && <Divider key={index}/>}
@@ -82,6 +80,8 @@ export default function AppMenu() {
     
   );
 }
+
+export default AppMenu;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -138,4 +138,6 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  active:{background: '#ede7f6'},
+  title_color:{ color: '#ede7f6'}
 }));
