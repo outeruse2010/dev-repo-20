@@ -30,7 +30,8 @@ def fetch_customer_areas():
     print(f'''****fetch_customer_areas: {cus_area_json['user']}''')
     df = customer_areas()
     print(f'****df: {df}')
-    json_data = df.to_json(orient="records", default_handler=str)
+    json_data = df.to_json(orient="records")
+    print(f'****json_data: {json_data}')
     return json_data
 
 @app.route("/add_customer_area", methods=['POST'])

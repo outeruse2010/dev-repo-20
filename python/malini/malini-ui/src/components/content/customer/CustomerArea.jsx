@@ -4,45 +4,19 @@ import {Button, IconButton, Tooltip, Typography, Box}  from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import CustomerAreaEntry from './CustomerAreaEntry';
-import {fetch_customer_areas} from './customer_api';
+import {cus_area_atom, fetch_customer_areas} from './customer_api';
 
-const api_url = (url) => ("http://127.0.0.1:5000/"+url); 
-
-export const fetch_graphql_post = (url, query) => {
-    const api = api_url(url);
-    let response = {};
-
-        fetch(api, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        query: query
-                    })
-                } ).then(res => res.json)
-                .then(data=> {console.log('****data: ',data); response = data.data;})
-                .catch(err => console.log('err'));
-    return response;
-
-}
+import {useRecoilState, useRecoilValue} from 'recoil';
 
 const CustomerArea = () => {
 
-    useEffect(()=>{
-        console.log('*****useEffect====');
-        // let qry = "query cus_area_query{ cusAreas { area_id, area_name, description, created_on, created_by, updated_on, updated_by, deleted}}";
-        // fetch_graphql_post('graphql_cus_area_list', qry);
-        // const url = api_url('fetch_customer_areas');
-        // const input = {"user": "Test"};
-        // fetch(url, {method: "POST", headers: { "Content-Type": "application/json" }, 
-        //            data:input }).then(res=> res.json()).then(res_json=> console.log(res_json));
-        // fetch(url).then(res=> res.json()).then(res_json=> console.log(res_json));
-        
-        const input = {user:"Test"};
-        const cus_area_res = fetch_customer_areas(input);
-        cus_area_res.then(data=> {console.log('*******data: ',data); });
+    const [cus_area_list, setCus_area_list] = useRecoilState(cus_area_atom);
 
-
-    }, []);
+    useEffect(() => {
+            const input = {user:"Test"};
+            const cus_area_res = fetch_customer_areas(input);
+            cus_area_res.then(data => setCus_area_list(data));
+        }, []);
 
     const [openAreaModal, setOpenAreaModal] = useState(false);
 
@@ -66,18 +40,17 @@ const CustomerArea = () => {
         );
     }
 
-    const rows = [
-        { id: 1, area_name: 'Snow', description: 'Jon', age: 35 }
-      ];
+    const rows = useRecoilValue(cus_area_atom);
 
     const columns = [
-        { field: "Edit", headerName: "",renderCell: renderEditButton ,  width: 110}
-        ,{ field: "Delete", headerName: "",renderCell: renderDeleteButton,  width: 120 }
-        ,{ field: 'area_name', headerName: 'Area', width: 200 }
+        { field: "area_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
+        ,{ field: "", headerName: "Delete", renderCell: renderDeleteButton,  width: 120 }
+        ,{ field: 'area_name', headerName: 'Area', width: 180 }
         ,{ field: 'description', headerName: 'Description', width: 300 }
+        ,{ field: 'created_by', headerName: 'Created By', width: 200 }
+        ,{ field: 'created_on', headerName: 'Created On', width: 150 }
+        ,{ field: 'updated_on', headerName: 'Updated On', width: 160 }
         ];
-    
-    
 
     return (
         <div>

@@ -15,7 +15,7 @@ from src.constants.app_const import *
 def customers():
     print('find customers....')
     engine = db_engine()
-    sql = f''' SELECT cus_id, cus_sr, first_name, mid_name, last_name, address, area_id, email, phone, 
+    sql = f''' SELECT cast(cus_id as varchar) id, cast(cus_id as varchar) cus_id, cus_sr, first_name, mid_name, last_name, address, area_id, email, phone, 
                comments, created_on, created_by, updated_on, updated_by, deleted
                FROM {DB_SCHEMA}.customer '''
     df = pd.read_sql(con=engine, sql=sql)
@@ -33,9 +33,9 @@ def add_customer(customer_json):
         df = pd.DataFrame([customer_json])
         engine = db_engine()
         df.to_sql('customer', con=engine, schema=DB_SCHEMA, if_exists='append', index=False)
-        msg_json[SUCCESS] = SUCCESS
+        msg_json['status'] = SUCCESS
     except Exception as ex:
-        msg_json[ERROR] = ERROR
+        msg_json['status'] = ERROR
         msg = f'''Failed to add customer [{first_name}] with Serial [{cus_sr}] !!! '''
         traceback.print_exc()
     log.info(msg)
@@ -60,9 +60,9 @@ def update_customer(customer_json):
         engine = db_engine()
         with engine.begin() as con:
             con.execute(sql)
-        msg_json[SUCCESS] = SUCCESS
+        msg_json['status'] = SUCCESS
     except Exception as ex:
-        msg_json[ERROR] = ERROR
+        msg_json['status'] = ERROR
         msg = f'''Failed to update customer [{first_name}] with Serial [{cus_sr}] !!! '''
         traceback.print_exc()
     log.info(msg)

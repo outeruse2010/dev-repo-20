@@ -16,12 +16,12 @@ from src.constants.app_const import *
 def customer_areas():
     log.info('find customer_areas....')
     engine = db_engine()
-    sql = f''' SELECT area_id, area_name, description, created_on, created_by, updated_on, updated_by, deleted
-            FROM {DB_SCHEMA}.cus_area '''
+    sql = f''' SELECT cast(area_id as varchar) id, cast(area_id as varchar) area_id, area_name, description, 
+               created_on, created_by, updated_on, updated_by, deleted
+               FROM {DB_SCHEMA}.cus_area '''
     df = pd.read_sql(con=engine, sql=sql)
     log.info(f'customer_areas no of rows selected : {df.shape[0]}')
     return df
-
 
 def add_customer_area(cus_area_json):
     log.info(f'add_customer_area....{cus_area_json}')
@@ -32,9 +32,9 @@ def add_customer_area(cus_area_json):
         df = pd.DataFrame([cus_area_json])
         engine = db_engine()
         df.to_sql('cus_area', con=engine, schema=DB_SCHEMA, if_exists='append', index=False)
-        msg_json[SUCCESS] = SUCCESS
+        msg_json['status'] = SUCCESS
     except Exception as ex:
-        msg_json[ERROR] = ERROR
+        msg_json['status'] = ERROR
         msg = f'''Failed to add customer area [{area_name}] !!! '''
         traceback.print_exc()
     log.info(msg)
@@ -55,17 +55,20 @@ def update_customer_area(cus_area_json):
         engine = db_engine()
         with engine.begin() as con:
             con.execute(sql)
-        msg_json[SUCCESS] = SUCCESS
+        msg_json['status'] = SUCCESS
     except Exception as ex:
-        msg_json[ERROR] = ERROR
+        msg_json['status'] = ERROR
         msg = f'''Failed to updated customer area [{area_name}] !!! '''
         traceback.print_exc()
     log.info(msg)
     msg_json["message"] = msg
     return msg_json
 
-# cus_area_json = {"area_name": "Khatsara", "description": "Khatsara area", "updated_by":"Auto"}
+# cus_area_json = {"area_name": "Khatsara", "description": "Khatsara area", "created_by":"Auto"}
 # add_customer_area(cus_area_json)
+# cus_area_json = {"area_name": "Belia Danga", "description": "Belia Danga", "created_by":"Auto"}
+# add_customer_area(cus_area_json)
+
 # cus_area_json = {"area_name": "Khatsara", "description": "Khatsara area", "updated_by":"Auto",
 #                  "area_id":"cb7fc2da-1a6b-4270-a522-49e6131d516d"}
 # update_customer_area(cus_area_json)

@@ -8,6 +8,10 @@ import Divider from '@material-ui/core/Divider';
 
 import {TextField, Button, Typography}  from '@material-ui/core';
 
+import {useRecoilState} from 'recoil';
+
+import {cus_area_atom,act_cus_area_atom, add_cus_area, fetch_customer_areas} from './customer_api';
+
 
 const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
     const classes = useStyles();
@@ -15,12 +19,26 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
     const [area_name, setArea_name] = useState('');
     const [description, setDescription] = useState('');
     const [areaNameErr, setAreaNameErr] = useState(false);
+    const [cus_area_list, setCus_area_list] = useRecoilState(cus_area_atom);
+    const [act_cus_area_res, setAct_cus_area_res] = useRecoilState(act_cus_area_atom);
 
     const onSubmit = (e) => {
         e.preventDefault();
         if(!area_name){
             setAreaNameErr(true);
+            return;
         }
+        const cus_area_json = {area_name, description, 'created_by': 'Test'};
+        const res = add_cus_area(cus_area_json);
+        res.then(data => {
+            // console.log('***add res: ',data);
+            setAct_cus_area_res(data);
+            if(data.status === 'success'){
+                const input = {user:"Test"};
+                const cus_area_res = fetch_customer_areas(input);
+                cus_area_res.then(cus_areas => setCus_area_list(cus_areas));
+            }   
+        });
     }
 
     return (        
