@@ -1,11 +1,48 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import {Button, IconButton, Tooltip, Typography, Box}  from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import CustomerAreaEntry from './CustomerAreaEntry';
+import {fetch_customer_areas} from './customer_api';
+
+const api_url = (url) => ("http://127.0.0.1:5000/"+url); 
+
+export const fetch_graphql_post = (url, query) => {
+    const api = api_url(url);
+    let response = {};
+
+        fetch(api, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        query: query
+                    })
+                } ).then(res => res.json)
+                .then(data=> {console.log('****data: ',data); response = data.data;})
+                .catch(err => console.log('err'));
+    return response;
+
+}
 
 const CustomerArea = () => {
+
+    useEffect(()=>{
+        console.log('*****useEffect====');
+        // let qry = "query cus_area_query{ cusAreas { area_id, area_name, description, created_on, created_by, updated_on, updated_by, deleted}}";
+        // fetch_graphql_post('graphql_cus_area_list', qry);
+        // const url = api_url('fetch_customer_areas');
+        // const input = {"user": "Test"};
+        // fetch(url, {method: "POST", headers: { "Content-Type": "application/json" }, 
+        //            data:input }).then(res=> res.json()).then(res_json=> console.log(res_json));
+        // fetch(url).then(res=> res.json()).then(res_json=> console.log(res_json));
+        
+        const input = {user:"Test"};
+        const cus_area_res = fetch_customer_areas(input);
+        cus_area_res.then(data=> {console.log('*******data: ',data); });
+
+
+    }, []);
 
     const [openAreaModal, setOpenAreaModal] = useState(false);
 
