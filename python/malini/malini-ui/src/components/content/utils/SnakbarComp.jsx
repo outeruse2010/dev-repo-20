@@ -17,7 +17,6 @@ const SnakbarComp = () => {
     }
 
     useEffect(() => {
-        console.log('***Snackbar useEffeect: ', message);
          const show = message ? true : false;
          setOpen(show);
     }, [message]);

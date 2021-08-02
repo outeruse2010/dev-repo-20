@@ -64,6 +64,28 @@ def update_customer_area(cus_area_json):
     msg_json["message"] = msg
     return msg_json
 
+def delete_customer_area(cus_area_json):
+    area_id = cus_area_json['area_id']
+    area_name = cus_area_json['area_name']
+    log.info(f'delete_customer_area for area_id: {area_id}')
+    sql = f''' UPDATE {DB_SCHEMA}.cus_area set deleted='Y', updated_by = '{cus_area_json['updated_by']}',
+               updated_on = now() where area_id = '{area_id}' '''
+    msg = f'''Customer area [{area_name}] deleted !!! '''
+    msg_json = {}
+    try:
+        engine = db_engine()
+        with engine.begin() as con:
+            con.execute(sql)
+        msg_json['status'] = SUCCESS
+    except Exception as ex:
+        msg_json['status'] = ERROR
+        msg = f'''Failed to delete customer area [{area_name}] !!! '''
+        traceback.print_exc()
+    log.info(msg)
+    msg_json["message"] = msg
+    return msg_json
+
+
 # cus_area_json = {"area_name": "Khatsara", "description": "Khatsara area", "created_by":"Auto"}
 # add_customer_area(cus_area_json)
 # cus_area_json = {"area_name": "Belia Danga", "description": "Belia Danga", "created_by":"Auto"}

@@ -10,7 +10,7 @@ import {TextField, Button, Typography}  from '@material-ui/core';
 
 import {useRecoilState} from 'recoil';
 
-import {cus_area_atom,act_cus_area_atom, add_cus_area, fetch_customer_areas} from './customer_api';
+import {cus_area_atom,act_cus_area_atom, add_update_cus_area, fetch_customer_areas} from './customer_api';
 import SnakbarComp, {message_atom} from '../utils/SnakbarComp';
 import { ClassRounded } from '@material-ui/icons';
 
@@ -25,22 +25,19 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
     const [cus_area_list, setCus_area_list] = useRecoilState(cus_area_atom);
     const [act_cus_area_res, setAct_cus_area_res] = useRecoilState(act_cus_area_atom);
     const [act_message, setAct_message] = useRecoilState(message_atom);
-    console.log('****selected_area: ',selected_area);
 
     useEffect(()=> {
-        console.log('****useEffect selected_area: ',selected_area);
+        onReset(); 
         if(selected_area){
-            console.log(' are nm: ', selected_area['area_name']);
             setArea_name(selected_area['area_name']);
             setDescription(selected_area.description);
         }
-    }, []);
+    }, [openAreaModal]);
     
 
     const onReset = () => {
         setArea_name('');
         setDescription('');
-        toggleAreaModal();
     }
 
     const onSubmit = (e) => {
@@ -49,8 +46,14 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
             setAreaNameErr(true);
             return;
         }
-        const cus_area_json = {area_name, description, 'created_by': 'Test'};
-        const res = add_cus_area(cus_area_json);
+        
+        let cus_area_json = {area_name, description, 'created_by': 'Test'};
+        const do_update = (action === 'Update');
+        if(do_update) {
+            cus_area_json = {area_name, description, 'updated_by': 'Test', 'area_id': selected_area['area_id']};
+        }
+
+        const res = add_update_cus_area(cus_area_json);
         res.then(data => {
             // console.log('***add res: ',data);
             setAct_cus_area_res(data);
@@ -58,6 +61,9 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
                 const input = {user:"Test"};
                 const cus_area_res = fetch_customer_areas(input);
                 cus_area_res.then(cus_areas => setCus_area_list(cus_areas));
+                if(do_update){
+                    toggleAreaModal();
+                }
             }            
             setAct_message(data);
         });
@@ -74,11 +80,11 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
                         <Typography variant="h6" className={classes.field} >{action} Customer Area</Typography>                    
                         
                         <form onSubmit={onSubmit} onReset={onReset} noValidate autoComplete="off">
-                            <TextField onChange={e=>{setArea_name(e.target.value);setAreaNameErr(false);}} error={areaNameErr} label="Area Name" fullWidth variant="outlined" required className={classes.field}/>
-                            <TextField onChange={e=>{setDescription(e.target.value);}} label="Description" multiline rows={3} fullWidth variant="outlined" className={classes.field}/> 
+                            <TextField value={area_name} onChange={e=>{setArea_name(e.target.value);setAreaNameErr(false);}} error={areaNameErr} label="Area Name" fullWidth variant="outlined" required className={classes.field}/>
+                            <TextField value={description} onChange={e=>{setDescription(e.target.value);}} label="Description" multiline rows={3} fullWidth variant="outlined" className={classes.field}/> 
                             <Button type="submit" variant="contained" color="primary" size="small">{action}</Button>
                             {(action === 'Add New') && <Button type="reset" variant="contained" size="small" className={classes.btn}>Reset</Button>}
-                            {(action === 'Update') && <Button type="reset" variant="contained" size="small" className={classes.btn}>Cancel</Button>}
+                            {(action === 'Update') && <Button onClick={toggleAreaModal} variant="contained" size="small" className={classes.btn}>Cancel</Button>}
                         </form>
                         <SnakbarComp />
                     </div>

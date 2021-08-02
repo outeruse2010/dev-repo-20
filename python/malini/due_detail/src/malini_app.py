@@ -39,13 +39,15 @@ def new_cus_area():
     cus_area_json = request.get_json()
     return add_customer_area(cus_area_json)
 
-
-
 @app.route("/update_customer_area")
 def update_cus_area():
     cus_area_json = request.get_json()
     return update_customer_area(cus_area_json)
 
+@app.route("/remove_customer_area")
+def remove_cus_area():
+    cus_area_json = request.get_json()
+    return delete_customer_area(cus_area_json)
 
 # =============== customer detail Api localhost:5000/graphql_customer_list    =====================
 # query to run on graphiql
