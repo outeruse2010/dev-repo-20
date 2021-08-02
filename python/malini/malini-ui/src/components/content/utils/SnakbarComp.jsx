@@ -1,32 +1,40 @@
-import React, {useState} from 'react';
-import {Snackbar, Alert} from '@material-ui/core'
-import {atom, useResetRecoilState, useRecoilValue} from 'recoil';
+import React, {useState, useEffect} from 'react';
+import Snackbar from '@material-ui/core/Snackbar';
+import {Alert, AlertTitle} from '@material-ui/lab';
+import {atom, useRecoilState, useRecoilValue} from 'recoil';
 
-export default message_atom = atom({key: 'message_atom', default: {} });
+export const message_atom = atom({key: 'message_atom', default: {} });
 
 const SnakbarComp = () => {
     const [open, setOpen] = useState(false);
     const res = useRecoilValue(message_atom);
+    const [act_message, setAct_message] = useRecoilState(message_atom);
+
     let message = '', severity = null;
     if(res){
         message = res.message;
         severity = res.status;
     }
 
-    const handleClose = () {
-        if(!open){
-            useResetRecoilState(message_atom);
-        }
-        setOpen(!open);
-    }
+    useEffect(() => {
+        console.log('***Snackbar useEffeect: ', message);
+         const show = message ? true : false;
+         setOpen(show);
+    }, [message]);
+
+    const handleClose = () => {
+        setAct_message({});
+        setOpen(false);
+    };
 
     return (
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity={severity}>
+            <AlertTitle>{severity}</AlertTitle>
                 {message}
             </Alert>
         </Snackbar>
-    )
+    );
 }
 
-export default SnakbarComp
+export default SnakbarComp;

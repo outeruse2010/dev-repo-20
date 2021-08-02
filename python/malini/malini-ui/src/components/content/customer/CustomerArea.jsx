@@ -19,13 +19,31 @@ const CustomerArea = () => {
         }, []);
 
     const [openAreaModal, setOpenAreaModal] = useState(false);
+    const [selected_area, setSelected_area] = useState(null);
 
-    const toggleAreaModal = () => setOpenAreaModal(!openAreaModal);
+    const toggleAreaModal = () => {
+        if(!openAreaModal){
+            setSelected_area(null);
+        }
+        setOpenAreaModal(!openAreaModal);
+    };
+
+    const onDeleteClick = (row) => {
+
+    };
+
+    const onEditClick = (row) => {
+        setSelected_area(row);
+        setOpenAreaModal(true);
+    };
+     
 
     const renderEditButton = (params) => {
         return (            
-            <IconButton aria-label="delete" onClick={() => {
-                    console.log('***Row: ', params.row);  }}>
+            <IconButton aria-label="delete" onClick={() => { 
+                    console.log('***Row: ', params.row); 
+                    onEditClick(params.row);
+                     }}>
                 <Tooltip title="Edit" arrow><EditIcon fontSize="small" /></Tooltip>
             </IconButton>
         );
@@ -34,7 +52,8 @@ const CustomerArea = () => {
     const renderDeleteButton = (params) => {
         return (            
             <IconButton aria-label="delete" onClick={() => {
-                    console.log('***Row: ', params.row);  }}>
+                    console.log('***Row: ', params.row); 
+                    onDeleteClick(params.row) }}>
                 <Tooltip title="Delete" arrow><DeleteIcon fontSize="small" /></Tooltip>
             </IconButton>
         );
@@ -65,7 +84,7 @@ const CustomerArea = () => {
                 <DataGrid rows={rows} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]}/>
             </div>
 
-            <CustomerAreaEntry openAreaModal={openAreaModal} toggleAreaModal={toggleAreaModal} />
+            <CustomerAreaEntry selected_area={selected_area} openAreaModal={openAreaModal} toggleAreaModal={toggleAreaModal} />
         </div>
     );
 }
