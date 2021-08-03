@@ -29,7 +29,7 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
     useEffect(()=> {
         onReset(); 
         if(selected_area){
-            setArea_name(selected_area['area_name']);
+            setArea_name(selected_area.area_name);
             setDescription(selected_area.description);
         }
     }, [openAreaModal]);
@@ -47,7 +47,7 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
             return;
         }
         
-        let cus_area_json = {area_name, description, 'created_by': 'Test'};
+        let cus_area_json = {area_name, description, created_by: 'Test'};
         const do_update = (action === 'Update');
         if(do_update) {
             cus_area_json = {area_name, description, 'updated_by': 'Test', 'area_id': selected_area['area_id']};

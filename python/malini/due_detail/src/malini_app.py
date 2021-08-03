@@ -27,11 +27,8 @@ from src.module.customer.repository.cus_area_repository import *
 @app.route("/fetch_customer_areas",  methods=['POST'])
 def fetch_customer_areas():
     cus_area_json = request.get_json()
-    print(f'''****fetch_customer_areas: {cus_area_json['user']}''')
     df = customer_areas()
-    print(f'****df: {df}')
     json_data = df.to_json(orient="records")
-    print(f'****json_data: {json_data}')
     return json_data
 
 @app.route("/add_customer_area", methods=['POST'])
@@ -39,12 +36,12 @@ def new_cus_area():
     cus_area_json = request.get_json()
     return add_customer_area(cus_area_json)
 
-@app.route("/update_customer_area")
+@app.route("/update_customer_area", methods=['POST'])
 def update_cus_area():
     cus_area_json = request.get_json()
     return update_customer_area(cus_area_json)
 
-@app.route("/remove_customer_area")
+@app.route("/remove_customer_area", methods=['POST'])
 def remove_cus_area():
     cus_area_json = request.get_json()
     return delete_customer_area(cus_area_json)

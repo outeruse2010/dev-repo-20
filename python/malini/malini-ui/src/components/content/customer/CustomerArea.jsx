@@ -33,6 +33,11 @@ const CustomerArea = () => {
         setOpenAreaModal(!openAreaModal);
     };
 
+    const onAddNewClick = () => {
+        setSelected_area(null);
+        toggleAreaModal();
+    }
+
     const onDeleteClick = (row) => {
         setSelected_area(row);
         let title = 'Delete Customer Area';
@@ -50,7 +55,7 @@ const CustomerArea = () => {
             let area_id = selected_area['area_id'];
             let area_name = selected_area['area_name'];
 
-            let cus_area_json = {area_id,area_name, 'updated_by': 'Test'};      
+            let cus_area_json = {area_id, area_name, updated_by: 'Test'};
 
             const res = delete_cus_area(cus_area_json);
             res.then(data => {
@@ -68,20 +73,16 @@ const CustomerArea = () => {
 
     const renderEditButton = (params) => {
         return (            
-            <IconButton aria-label="delete" onClick={() => {
-                    onEditClick(params.row);
-                     }}>
-                <Tooltip title="Edit" arrow><EditIcon fontSize="small" /></Tooltip>
+            <IconButton onClick={() => {onEditClick(params.row);}}>
+                <Tooltip title="Edit" arrow><EditIcon fontSize="small"/></Tooltip>
             </IconButton>
         );
     }
 
     const renderDeleteButton = (params) => {
         return (            
-            <IconButton aria-label="delete" onClick={() => {
-                    console.log('***Row: ', params.row); 
-                    onDeleteClick(params.row) }}>
-                <Tooltip title="Delete" arrow><DeleteIcon fontSize="small" /></Tooltip>
+            <IconButton onClick={() => {onDeleteClick(params.row) }}>
+                <Tooltip title="Delete" arrow><DeleteIcon fontSize="small"/></Tooltip>
             </IconButton>
         );
     }
@@ -95,6 +96,7 @@ const CustomerArea = () => {
         ,{ field: 'description', headerName: 'Description', width: 300 }
         ,{ field: 'created_by', headerName: 'Created By', width: 200 }
         ,{ field: 'created_on', headerName: 'Created On', width: 150 }
+        ,{ field: 'updated_by', headerName: 'Updated By', width: 200 }
         ,{ field: 'updated_on', headerName: 'Updated On', width: 160 }
         ];
 
@@ -103,11 +105,11 @@ const CustomerArea = () => {
             <Box display='flex' p={1} >
                 <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customer Areas </Typography></Box>
                 <Box p={1}>
-                <Button type="button" onClick={toggleAreaModal} variant="contained" size="small" color="primary" > Add new</Button>
+                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined"> Add New Area</Button>
                 </Box>
             </Box>
 
-            <div style={{ height: 400, width: '100%' }}>
+            <div style={{ height: 500, width: '100%' }}>
                 <DataGrid rows={rows} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]}/>
             </div>
 

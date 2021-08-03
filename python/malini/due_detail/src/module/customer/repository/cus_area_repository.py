@@ -18,7 +18,8 @@ def customer_areas():
     engine = db_engine()
     sql = f''' SELECT cast(area_id as varchar) id, cast(area_id as varchar) area_id, area_name, description, 
                created_on, created_by, updated_on, updated_by, deleted
-               FROM {DB_SCHEMA}.cus_area '''
+               FROM {DB_SCHEMA}.cus_area 
+               where deleted = 'N' order by created_on desc '''
     df = pd.read_sql(con=engine, sql=sql)
     log.info(f'customer_areas no of rows selected : {df.shape[0]}')
     return df

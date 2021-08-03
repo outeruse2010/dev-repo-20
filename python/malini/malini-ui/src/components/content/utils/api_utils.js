@@ -19,10 +19,10 @@ async function postData(url = '', data = {}) {
     return response.json(); // parses JSON response into native JavaScript objects
   }
   
-  postData('https://example.com/answer', { answer: 42 })
-    .then(data => {
-      console.log(data); // JSON data parsed by `data.json()` call
-    });
+  // postData('https://example.com/answer', { answer: 42 })
+  //   .then(data => {
+  //     console.log(data); // JSON data parsed by `data.json()` call
+  //   });
 
 
 /********************************************* */
