@@ -15,6 +15,26 @@ CORS(app)
 def test():
     return 'Hello World!!!'
 
+from src.module.activity.user_repository import *
+
+@app.route('/login', methods=['POST'])
+def login():
+    login_json = request.get_json()
+    res_json = user_login(login_json)
+    return res_json
+
+@app.route('/add_user', methods=['POST'])
+def new_user_add():
+    user_json = request.get_json()
+    res_json = add_new_user(user_json)
+    return res_json
+
+@app.route('/assign_role', methods=['POST'])
+def assign_role():
+    user_role_json = request.get_json()
+    res_json = add_user_role_map(user_role_json)
+    return res_json
+
 # =============== cus_area detail Api localhost:5000/graphql_cus_area_list    =====================
 # query to run on graphiql
 # query cus_area_query{ cusAreas { area_id, area_name, description, created_on, created_by, updated_on, updated_by, deleted}}
