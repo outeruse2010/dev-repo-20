@@ -1,7 +1,7 @@
 import AppMenu from "./components/menu/app_menu";
 import {createTheme, ThemeProvider} from "@material-ui/core"
 import { deepPurple } from "@material-ui/core/colors";
-import purple from '@material-ui/core/colors/purple';
+
 
 const theme = createTheme({
   palette:{
@@ -14,10 +14,11 @@ const theme = createTheme({
 });
 
 function App() {
+    
   return (
     <div>
       <ThemeProvider theme={theme}>
-          <AppMenu />
+          <AppMenu />          
      </ThemeProvider>
     </div>
   );

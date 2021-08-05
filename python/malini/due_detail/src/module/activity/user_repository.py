@@ -16,7 +16,7 @@ def user_login(login_json):
     user_name = login_json['user_name']
     user_pass = login_json['user_pass']
     msg = ''
-    res_json = {}
+    res_json = {'user_name':user_name}
     sql = f'''select cast(user_id as varchar) user_id from {DB_SCHEMA}.user_list 
               where deleted='N' and user_name= '{user_name}' and user_pass ='{user_pass}' '''
     engine = db_engine()
@@ -28,28 +28,36 @@ def user_login(login_json):
     else:
         try:
             user_id = user_df['user_id'].values[0]
+            res_json['user_id'] = user_id
 
-            with engine.begin() as con:
-                con.execute(f'''delete from {DB_SCHEMA}.log_in_detail where user_id='{user_id}' ''')
-                login_detail_json = {'user_id':user_id}
-                login_detail_df = pd.DataFrame([login_detail_json])
-                login_detail_df.to_sql('log_in_detail', con=con, schema=DB_SCHEMA, if_exists='append', index=False)
-                log.info(f'''Login code generated for user: {user_name}''')
-            login_sql = f'''select cast(log_in_code as varchar) log_in_code from {DB_SCHEMA}.log_in_detail where user_id='{user_id}' '''
-            login_code_df = pd.read_sql_query(sql=login_sql, con=engine)
-            login_code_df['user_id'] = user_id
-            res_json = login_code_df.to_json(orient='records')
-            status = SUCCESS
+            # check role before login
+            role_sql = f'''select role_name from {DB_SCHEMA}.user_role_map where deleted='N' and user_id='{user_id}' '''
+            role_df = pd.read_sql_query(con=engine, sql=role_sql)
+            if role_df.empty:
+                msg = f'''User [{user_name}] does not have valid role !!!! '''
+            else:
+
+                # save login detail and generate login code
+                with engine.begin() as con:
+                    con.execute(f'''delete from {DB_SCHEMA}.log_in_detail where user_id='{user_id}' ''')
+                    login_detail_json = {'user_id':user_id}
+                    login_detail_df = pd.DataFrame([login_detail_json])
+                    login_detail_df.to_sql('log_in_detail', con=con, schema=DB_SCHEMA, if_exists='append', index=False)
+                    log.info(f'''Login code generated for user: {user_name}''')
+                login_sql = f'''select cast(log_in_code as varchar) log_in_code from {DB_SCHEMA}.log_in_detail where user_id='{user_id}' '''
+                login_code_df = pd.read_sql_query(sql=login_sql, con=engine)
+                log_in_code = login_code_df['log_in_code'].values[0]
+                res_json['log_in_code'] = log_in_code
+                status = SUCCESS
         except Exception as e:
-            msg = f'''Error in validating user [{user_name}] !!! '''
-            status = ERROR
+            msg = f'''Exception in storing login detail for user [{user_name}] !!! '''
             log.error(f'Failed to login for the user name: {user_name}...')
             traceback.print_exc()
         log.info(msg)
         if status == ERROR:
             res_json["message"] = msg
-            res_json['status'] = status
-    log.info(msg)
+    res_json['status'] = status
+    log.info(f"login res_json: {res_json}")
     return res_json
 
 def allowed_to_do(user_id, log_in_code, role_list):

@@ -6,17 +6,37 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import {drawerWidth} from './menu_const';
 
+import {login_atom} from '../content/login/login_api';
+import {useRecoilValue} from 'recoil';
+
 function MenuHeader ({onMenuIconClick, open}) {
+    const login_data = useRecoilValue(login_atom);
+    let success = false, user_name = '';
+    if(login_data && login_data.status){
+      success = (login_data.status === 'success');
+      user_name = login_data.user_name;
+    }    
     const classes = useStyles();
     return (
         <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: open, })} >
         <Toolbar>
-          <IconButton  onClick={() => onMenuIconClick()} color="inherit" aria-label="open drawer"  edge="start" className={clsx(classes.menuButton, open && classes.hide)} >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap className={classes.title_color}> Malini </Typography>
+          <Grid container spacing={1}>
+            <Grid item xs={3}>
+              {success && 
+                <IconButton  onClick={() => onMenuIconClick()} color="inherit" aria-label="open drawer"  edge="start" className={clsx(classes.menuButton, open && classes.hide)} >
+                  <MenuIcon />
+                </IconButton>}
+            </Grid>
+            <Grid item xs={6}>
+                <Typography variant="h6" noWrap className={classes.title_color}> Malini </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography variant="h6" noWrap className={classes.title_color}> {user_name} </Typography>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
     );
