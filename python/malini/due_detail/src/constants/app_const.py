@@ -7,3 +7,6 @@
 DB_SCHEMA = 'malini_schema'
 
 SUCCESS,ERROR = 'success','error'
+
+VIEW, UPDATE = 'view','update'
+

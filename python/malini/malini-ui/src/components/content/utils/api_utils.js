@@ -1,7 +1,10 @@
+import Cookies from 'js-cookie';
+
 /*******************Example ************************* */
 
 // Example POST method implementation:
 async function postData(url = '', data = {}) {
+    
     // Default options are marked with *
     const response = await fetch(url, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -33,6 +36,9 @@ export const api_url = (url) => ("http://127.0.0.1:5000/"+url);
 export const post_request = (url, json_input = {}) =>{
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    json_input['log_in_code'] = Cookies.get('log_in_code');
+    json_input['user_id'] = Cookies.get('user_id');
+    headers.append('set-cookie', 'log_in_code=Test1');    
 
     const api = api_url(url);
 
@@ -41,6 +47,7 @@ export const post_request = (url, json_input = {}) =>{
             headers: headers,
             mode: 'cors',
             cache: 'default',
+            credentials: 'same-origin',
             body:  JSON.stringify(json_input)
         });
     return postRequest;

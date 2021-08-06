@@ -4,7 +4,7 @@
 # * Created by Malancha at 28/7/2021
 # ********************************
 
-from flask import Flask, request
+from flask import Flask, request, make_response
 from flask_cors import CORS
 from flask_graphql import GraphQLView
 
@@ -21,7 +21,9 @@ from src.module.activity.user_repository import *
 def login():
     login_json = request.get_json()
     res_json = user_login(login_json)
-    return res_json
+    response = make_response(res_json)
+    response.set_cookie("log_in_code", "log_in_code_value")
+    return response
 
 @app.route('/add_user', methods=['POST'])
 def new_user_add():
@@ -46,7 +48,12 @@ from src.module.customer.repository.cus_area_repository import *
 
 @app.route("/fetch_customer_areas",  methods=['POST'])
 def fetch_customer_areas():
-    cus_area_json = request.get_json()
+    input = request.get_json()
+    # log_in_code = request.cookies.get('log_in_code')
+    # print(f'*****cookie: {log_in_code}')
+    is_allowed = allowed_to_do(input['user_id'],input['log_in_code'],[VIEW,UPDATE])
+    if  is_allowed:
+        return {'status': ERROR, 'message':'Unauthorized Access !!!'}
     df = customer_areas()
     json_data = df.to_json(orient="records")
     return json_data

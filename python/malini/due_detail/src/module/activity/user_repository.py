@@ -21,10 +21,10 @@ def user_login(login_json):
               where deleted='N' and user_name= '{user_name}' and user_pass ='{user_pass}' '''
     engine = db_engine()
     user_df = pd.read_sql_query(con=engine, sql=sql)
-    print(f'***user_df : {user_df}')
+    # print(f'***user_df : {user_df}')
     status = ERROR
     if user_df.empty:
-        msg = f'''Incorrect user name or password for the user name[{user_name}] !!! '''
+        msg = f'''Incorrect user name or password for the user name [{user_name}] !!! '''
     else:
         try:
             user_id = user_df['user_id'].values[0]
@@ -48,15 +48,17 @@ def user_login(login_json):
                 login_code_df = pd.read_sql_query(sql=login_sql, con=engine)
                 log_in_code = login_code_df['log_in_code'].values[0]
                 res_json['log_in_code'] = log_in_code
+                msg = f'User name [{user_name}] Login successful !!!'
                 status = SUCCESS
         except Exception as e:
             msg = f'''Exception in storing login detail for user [{user_name}] !!! '''
             log.error(f'Failed to login for the user name: {user_name}...')
             traceback.print_exc()
         log.info(msg)
-        if status == ERROR:
-            res_json["message"] = msg
+
+    res_json["message"] = msg
     res_json['status'] = status
+
     log.info(f"login res_json: {res_json}")
     return res_json
 

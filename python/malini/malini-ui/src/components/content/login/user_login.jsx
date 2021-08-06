@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import {TextField, Button, Typography}  from '@material-ui/core';
 
+import Cookies from 'js-cookie';
 
 import {login_atom,do_login} from './login_api';
 import {useRecoilState} from 'recoil';
@@ -33,8 +34,14 @@ const UserLogin = () => {
         }
         const user_login_json = {user_name, user_pass};
         const res_login = do_login(user_login_json);
+
         res_login.then(data => {
             setLog_in_detail(data);
+            const log_in_code = data.log_in_code;
+            // const log_in_code = Cookies.get('log_in_code');
+            // console.log('***log_in_code: ',log_in_code);
+            Cookies.set('log_in_code',log_in_code);
+            Cookies.set('user_id',data.user_id);
             setAct_message({'status': data.status, 'message': data.message});        
         });
 

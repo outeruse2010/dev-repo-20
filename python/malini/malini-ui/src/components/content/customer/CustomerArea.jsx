@@ -21,9 +21,13 @@ const CustomerArea = () => {
 
 
     useEffect(() => {
-            const input = {user:"Test"};
-            const cus_area_res = fetch_customer_areas(input);
-            cus_area_res.then(data => setCus_area_list(data));
+            const cus_area_res = fetch_customer_areas();
+            if (cus_area_res['status'] === 'error'){
+                setAct_message(cus_area_res);
+            }else{
+                cus_area_res.then(data => setCus_area_list(data));
+            }
+            
         }, []);
 
     const [openAreaModal, setOpenAreaModal] = useState(false);
@@ -88,6 +92,7 @@ const CustomerArea = () => {
     }
 
     const rows = useRecoilValue(cus_area_atom);
+    console.log('***rows: ', rows);
 
     const columns = [
         { field: "area_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
