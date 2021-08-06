@@ -18,16 +18,19 @@ const CustomerArea = () => {
     const [act_cus_area_res, setAct_cus_area_res] = useRecoilState(act_cus_area_atom);
     const [dialog_message, setDialog_message] = useRecoilState(dialog_atom);
     const [act_message, setAct_message] = useRecoilState(message_atom);
+    
 
 
     useEffect(() => {
-            const cus_area_res = fetch_customer_areas();
-            if (cus_area_res['status'] === 'error'){
-                setAct_message(cus_area_res);
-            }else{
-                cus_area_res.then(data => setCus_area_list(data));
-            }
-            
+            const cus_area_res = fetch_customer_areas();            
+            cus_area_res.then(data => {
+                console.log('***data: ', data);
+                if(data['status'] === 'error'){
+                    setAct_message(cus_area_res);
+                }else {
+                    setCus_area_list(data);
+                }
+            });
         }, []);
 
     const [openAreaModal, setOpenAreaModal] = useState(false);
@@ -91,8 +94,6 @@ const CustomerArea = () => {
         );
     }
 
-    const rows = useRecoilValue(cus_area_atom);
-    console.log('***rows: ', rows);
 
     const columns = [
         { field: "area_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
@@ -107,6 +108,7 @@ const CustomerArea = () => {
 
     return (
         <div>
+            <>
             <Box display='flex' p={1} >
                 <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customer Areas </Typography></Box>
                 <Box p={1}>
@@ -115,11 +117,13 @@ const CustomerArea = () => {
             </Box>
 
             <div style={{ height: 500, width: '100%' }}>
-                <DataGrid rows={rows} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]}/>
+                <DataGrid rows={cus_area_list} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]}/>
             </div>
 
             <CustomerAreaEntry selected_area={selected_area} openAreaModal={openAreaModal} toggleAreaModal={toggleAreaModal} />
             <DialogComp onDialogClose={(ans)=> onDialogClose(ans)}/>
+            </>
+            
             <SnakbarComp />
         </div>
     );

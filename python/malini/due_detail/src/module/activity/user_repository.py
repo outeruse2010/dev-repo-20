@@ -68,7 +68,7 @@ def allowed_to_do(user_id, log_in_code, role_list):
     login_sql = f'''select cast(log_in_code as varchar) log_in_code from {DB_SCHEMA}.log_in_detail 
     where user_id='{user_id}' and log_in_code='{log_in_code}' '''
     login_code_df = pd.read_sql_query(sql=login_sql, con=engine)
-
+    status = ERROR
     msg = f'''User [{user_id}] is allowed. '''
     allowed = False
     if login_code_df.empty:
@@ -81,7 +81,8 @@ def allowed_to_do(user_id, log_in_code, role_list):
             msg = f'''User [{user_id}] does not have valid role !!!! '''
         else:
             allowed = True
-    res_json = {'message': msg, 'allowed': allowed}
+            status = SUCCESS
+    res_json = {'message': msg, 'allowed': allowed, 'status': status}
     log.info(f'allowed_to_do response : {res_json}')
     return res_json
 
@@ -166,7 +167,7 @@ def add_user_role_map(user_role_json):
 # u_role = {'role_name':'view', 'created_by':'Auto'}
 # add_new_role(u_role)
 
-# u_role_map = {'user_id': 'ad99431a-7071-4052-aa3c-d7dfcbcfc28a', 'role_name':'update', 'created_by':'Auto'}
+# u_role_map = {'user_id': '1be64143-bb02-4748-b3ba-ebdf7ca72bbc', 'role_name':'update', 'created_by':'Auto'}
 # add_user_role_map(u_role_map)
 
 # login_json = {'user_name': 'Test', 'user_pass': 'test'}

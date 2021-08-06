@@ -45,18 +45,32 @@ app.add_url_rule('/graphql_cus_area_list', view_func= GraphQLView.as_view('grapg
 
 from src.module.customer.repository.cus_area_repository import *
 
+def is_authorised(check):
+    def validate():
+        input = request.get_json()
+        access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+        print(f'*****access_json: {access_json}')
+        if not access_json['allowed']:
+            return access_json
+        return check
+    return validate
 
 @app.route("/fetch_customer_areas",  methods=['POST'])
+# @is_authorised
 def fetch_customer_areas():
     input = request.get_json()
     # log_in_code = request.cookies.get('log_in_code')
     # print(f'*****cookie: {log_in_code}')
-    is_allowed = allowed_to_do(input['user_id'],input['log_in_code'],[VIEW,UPDATE])
-    if  is_allowed:
-        return {'status': ERROR, 'message':'Unauthorized Access !!!'}
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    # access_json = {'message': "msg", 'allowed': False, 'status': ERROR}
+    if not access_json['allowed']:
+        return access_json
     df = customer_areas()
     json_data = df.to_json(orient="records")
     return json_data
+
+
+
 
 @app.route("/add_customer_area", methods=['POST'])
 def new_cus_area():
@@ -80,6 +94,16 @@ from src.module.customer.service.cus_area_service import cus_area_schema
 # app.add_url_rule('/graphql_customer_list', view_func= GraphQLView.as_view('grapghql', schema= cus_area_schema(), graphiql=True))
 
 from src.module.customer.repository.customer_repository import *
+
+@app.route("/fetch_customers",  methods=['POST'])
+def fetch_customers():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    df = customer_areas()
+    json_data = df.to_json(orient="records")
+    return json_data
 
 @app.route("/add_customer")
 def new_customer():
