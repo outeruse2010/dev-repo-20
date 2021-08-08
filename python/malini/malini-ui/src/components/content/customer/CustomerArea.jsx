@@ -18,13 +18,13 @@ const CustomerArea = () => {
     const [act_cus_area_res, setAct_cus_area_res] = useRecoilState(act_cus_area_atom);
     const [dialog_message, setDialog_message] = useRecoilState(dialog_atom);
     const [act_message, setAct_message] = useRecoilState(message_atom);
-    
+    const [openAreaModal, setOpenAreaModal] = useState(false);
+    const [selected_area, setSelected_area] = useState(null);
 
 
     useEffect(() => {
             const cus_area_res = fetch_customer_areas();            
             cus_area_res.then(data => {
-                console.log('***data: ', data);
                 if(data['status'] === 'error'){
                     setAct_message(cus_area_res);
                 }else {
@@ -33,8 +33,7 @@ const CustomerArea = () => {
             });
         }, []);
 
-    const [openAreaModal, setOpenAreaModal] = useState(false);
-    const [selected_area, setSelected_area] = useState(null);
+    
 
     const toggleAreaModal = () => {        
         setOpenAreaModal(!openAreaModal);
@@ -108,7 +107,7 @@ const CustomerArea = () => {
 
     return (
         <div>
-            <>
+            <SnakbarComp />
             <Box display='flex' p={1} >
                 <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customer Areas </Typography></Box>
                 <Box p={1}>
@@ -122,9 +121,7 @@ const CustomerArea = () => {
 
             <CustomerAreaEntry selected_area={selected_area} openAreaModal={openAreaModal} toggleAreaModal={toggleAreaModal} />
             <DialogComp onDialogClose={(ans)=> onDialogClose(ans)}/>
-            </>
-            
-            <SnakbarComp />
+                        
         </div>
     );
 }

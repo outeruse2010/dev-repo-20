@@ -4,15 +4,15 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
-import Divider from '@material-ui/core/Divider';
+import ModalHeader from '../utils/ModalHeader';
 
-import {TextField, Button, Typography}  from '@material-ui/core';
+import {TextField, Button}  from '@material-ui/core';
 
 import {useRecoilState} from 'recoil';
 
 import {cus_area_atom,act_cus_area_atom, add_update_cus_area, fetch_customer_areas} from './customer_api';
 import SnakbarComp, {message_atom} from '../utils/SnakbarComp';
-import { ClassRounded } from '@material-ui/icons';
+
 import {login_atom} from '../login/login_api';
 import {useRecoilValue} from 'recoil';
 
@@ -81,8 +81,8 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
                 BackdropComponent={Backdrop}>
                 <Fade in={openAreaModal}>
                     <div className={classes.paper}>
-                        <Typography variant="h6" className={classes.field} >{action} Customer Area</Typography>                    
-                        
+                        <ModalHeader header={action + ' Customer Area'} toggleModal={toggleAreaModal}/>
+
                         <form onSubmit={onSubmit} onReset={onReset} noValidate autoComplete="off">
                             <TextField value={area_name} onChange={e=>{setArea_name(e.target.value);setAreaNameErr(false);}} error={areaNameErr} label="Area Name" fullWidth variant="outlined" required className={classes.field}/>
                             <TextField value={description} onChange={e=>{setDescription(e.target.value);}} label="Description" multiline rows={3} fullWidth variant="outlined" className={classes.field}/> 
