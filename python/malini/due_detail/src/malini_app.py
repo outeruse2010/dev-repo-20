@@ -8,6 +8,8 @@ from flask import Flask, request, make_response
 from flask_cors import CORS
 from flask_graphql import GraphQLView
 
+from src.utils.app_utils import trim_json
+
 app = Flask(__name__)
 CORS(app)
 
@@ -74,8 +76,13 @@ def fetch_customer_areas():
 
 @app.route("/add_customer_area", methods=['POST'])
 def new_cus_area():
-    cus_area_json = request.get_json()
-    return add_customer_area(cus_area_json)
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    trim_json(input, ['user_id', 'log_in_code'])
+
+    return add_customer_area(input)
 
 @app.route("/update_customer_area", methods=['POST'])
 def update_cus_area():
@@ -107,8 +114,12 @@ def fetch_customers():
 
 @app.route("/add_customer",  methods=['POST'])
 def new_customer():
-    customer_json = request.get_json()
-    return add_customer(customer_json)
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    trim_json(input, ['user_id', 'log_in_code'])
+    return add_customer(input)
 
 @app.route("/update_customer",  methods=['POST'])
 def update_customer_info():
