@@ -15,7 +15,9 @@ from src.constants.app_const import *
 def customers():
     print('find customers....')
     engine = db_engine()
-    sql = f''' SELECT cast(cus_id as varchar) id, cast(cus_id as varchar) cus_id, cus_sr, first_name, mid_name, last_name, address, area_id, email, phone, 
+    sql = f''' SELECT cast(cus_id as varchar) id, cast(cus_id as varchar) cus_id, 
+                cus_sr, first_name, mid_name, last_name, address, 
+                cast(area_id as varchar) area_id, email, phone, 
                comments, created_on, created_by, updated_on, updated_by, deleted
                FROM {DB_SCHEMA}.customer '''
     df = pd.read_sql(con=engine, sql=sql)
@@ -69,5 +71,7 @@ def update_customer(customer_json):
     msg_json["message"] = msg
     return msg_json
 
-
-customers()
+# customer_json = {'cus_sr':'1','first_name':'John','last_name':'Hanks','address':'Kolkata','area_id':'ee336349-3b85-4712-942a-add0142a23e3'
+#     ,'email':'abc@xyz.com','created_by':'Auto'}
+# add_customer(customer_json)
+# customers()

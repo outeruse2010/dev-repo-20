@@ -1,81 +1,68 @@
-import React, {useState} from 'react';
-
-const Customers = () => {
-    return (
-        <div>
-            Customers
-        </div>
-    )
-}
-
-export default Customers
-
 import React, {useState, useEffect} from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import {Button, IconButton, Tooltip, Typography, Box}  from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-import {customer_atom, act_customer_atom, fetch_customer_areas, delete_customer} from './customer_api';
+import {customer_atom, act_customer_atom, fetch_customers, delete_customer} from './customer_api';
 
 import {useRecoilState, useRecoilValue} from 'recoil';
 import { dialog_atom } from '../utils/DialogComp';
 import DialogComp from '../utils/DialogComp';
 import { message_atom } from '../utils/SnakbarComp';
 import SnakbarComp from '../utils/SnakbarComp';
+import CustomerEntry from './CustomerEntry';
 
 const Customers = () => {
-
-    const [customer_list, setcustomer_list] = useRecoilState(customer_atom);
+    
+    const [customer_list, setCustomer_list] = useRecoilState(customer_atom);
     const [act_customer_res, setAct_customer_res] = useRecoilState(act_customer_atom);
     const [dialog_message, setDialog_message] = useRecoilState(dialog_atom);
     const [act_message, setAct_message] = useRecoilState(message_atom);
 
 
     useEffect(() => {
-            const input = {user:"Test"};
-            const customer_res = fetch_customer_areas(input);
-            customer_res.then(data => setcustomer_list(data));
+            const customer_res = fetch_customers();
+            customer_res.then(data => setCustomer_list(data));
         }, []);
 
-    const [openAreaModal, setOpenAreaModal] = useState(false);
-    const [selected_area, setSelected_area] = useState(null);
+    const [openCustomerModal, setOpenCustomerModal] = useState(false);
+    const [selected_customer, setSelected_customer] = useState(null);
 
-    const toggleAreaModal = () => {        
-        setOpenAreaModal(!openAreaModal);
+    const toggleCustomerModal = () => {        
+        setOpenCustomerModal(!openCustomerModal);
     };
 
     const onAddNewClick = () => {
-        setSelected_area(null);
-        toggleAreaModal();
+        setSelected_customer(null);
+        toggleCustomerModal();
     }
 
     const onDeleteClick = (row) => {
-        setSelected_area(row);
-        let title = 'Delete Customer Area';
-        let content = 'Are you sure to DELETE area [' + row['area_name'] + '] ?';
+        setSelected_customer(row);
+        let title = 'Delete Customer';
+        let content = 'Are you sure to DELETE customer [' + row['first_name'] + '] ?';
         setDialog_message({title, content});
     };
 
     const onEditClick = (row) => {
-        setSelected_area(row);
-        setOpenAreaModal(true);
+        setSelected_customer(row);
+        setOpenCustomerModal(true);
     };
 
     const onDialogClose = (ans) => {
         if(ans === 'Y'){
-            let area_id = selected_area['area_id'];
-            let area_name = selected_area['area_name'];
+            let cus_id = selected_customer['cus_id'];
+            let first_name = selected_customer['first_name'];
 
-            let customer_json = {area_id, area_name, updated_by: 'Test'};
+            let customer_json = {cus_id, first_name, updated_by: 'Test'};
 
             const res = delete_customer(customer_json);
             res.then(data => {
                 setAct_customer_res(data);
-                if(data.status === 'success'){
-                    const input = {user:"Test"};
-                    const customer_res = fetch_customer_areas(input);
-                    customer_res.then(customers => setcustomer_list(customers));
+                if(data.status === 'success'){                    
+                    const customer_res = fetch_customers();
+                    customer_res.then(customers => setCustomer_list(customers));
                 }            
                 setAct_message(data);
             });
@@ -102,30 +89,34 @@ const Customers = () => {
     const rows = useRecoilValue(customer_atom);
 
     const columns = [
-        { field: "area_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
+        { field: "cus_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
         ,{ field: "", headerName: "Delete", renderCell: renderDeleteButton,  width: 120 }
-        ,{ field: 'area_name', headerName: 'Area', width: 180 }
-        ,{ field: 'description', headerName: 'Description', width: 300 }
-        ,{ field: 'created_by', headerName: 'Created By', width: 200 }
-        ,{ field: 'created_on', headerName: 'Created On', width: 150 }
-        ,{ field: 'updated_by', headerName: 'Updated By', width: 200 }
+        ,{ field: 'first_name', headerName: 'First Name', width: 180 }
+        ,{ field: 'last_name', headerName: 'Last Name', width: 300 }
+        ,{ field: 'address', headerName: 'Address', width: 200 }
+        ,{ field: 'email', headerName: 'Email', width: 150 }
+        ,{ field: 'phone', headerName: 'Phone', width: 200 }
+        ,{ field: 'comments', headerName: 'Comments', width: 200 }
+        ,{ field: 'created_by', headerName: 'Created By', width: 160 }
+        ,{ field: 'created_on', headerName: 'Created On', width: 160 }
+        ,{ field: 'updated_by', headerName: 'Updated By', width: 160 }
         ,{ field: 'updated_on', headerName: 'Updated On', width: 160 }
         ];
 
     return (
         <div>
             <Box display='flex' p={1} >
-                <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customer Areas </Typography></Box>
+                <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customers </Typography></Box>
                 <Box p={1}>
-                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined"> Add New Area</Button>
+                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined"> Add New Customer</Button>
                 </Box>
             </Box>
 
             <div style={{ height: 500, width: '100%' }}>
-                <DataGrid rows={rows} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]}/>
+                <DataGrid rows={rows} columns={columns} disableSelectionOnClick rowsPerPageOptions={[]}/>
             </div>
 
-            <CustomerAreaEntry selected_area={selected_area} openAreaModal={openAreaModal} toggleAreaModal={toggleAreaModal} />
+            <CustomerEntry selected_customer={selected_customer} openCustomerModal={openCustomerModal} toggleCustomerModal={toggleCustomerModal} />
             <DialogComp onDialogClose={(ans)=> onDialogClose(ans)}/>
             <SnakbarComp />
         </div>

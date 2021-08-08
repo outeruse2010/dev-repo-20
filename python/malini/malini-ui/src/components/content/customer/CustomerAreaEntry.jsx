@@ -13,11 +13,14 @@ import {useRecoilState} from 'recoil';
 import {cus_area_atom,act_cus_area_atom, add_update_cus_area, fetch_customer_areas} from './customer_api';
 import SnakbarComp, {message_atom} from '../utils/SnakbarComp';
 import { ClassRounded } from '@material-ui/icons';
-
+import {login_atom} from '../login/login_api';
+import {useRecoilValue} from 'recoil';
 
 
 const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
     const classes = useStyles();
+    const login_data = useRecoilValue(login_atom);
+    const user_name = login_data.user_name;
     const action = selected_area ? 'Update' : 'Add New';
     const [area_name, setArea_name] = useState('');
     const [description, setDescription] = useState('');
@@ -47,10 +50,12 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
             return;
         }
         
-        let cus_area_json = {area_name, description, created_by: 'Test'};
+        let cus_area_json = {area_name, description};
         const do_update = (action === 'Update');
         if(do_update) {
-            cus_area_json = {area_name, description, 'updated_by': 'Test', 'area_id': selected_area['area_id']};
+            cus_area_json = {area_name, description, 'updated_by': user_name, 'area_id': selected_area['area_id']};
+        }else{
+            cus_area_json['created_by'] = user_name; 
         }
 
         const res = add_update_cus_area(cus_area_json);
@@ -58,8 +63,7 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
             // console.log('***add res: ',data);
             setAct_cus_area_res(data);
             if(data.status === 'success'){
-                const input = {user:"Test"};
-                const cus_area_res = fetch_customer_areas(input);
+                const cus_area_res = fetch_customer_areas();
                 cus_area_res.then(cus_areas => setCus_area_list(cus_areas));
                 if(do_update){
                     toggleAreaModal();

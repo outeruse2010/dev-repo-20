@@ -101,18 +101,20 @@ def fetch_customers():
     access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
     if not access_json['allowed']:
         return access_json
-    df = customer_areas()
+    df = customers()
     json_data = df.to_json(orient="records")
     return json_data
 
-@app.route("/add_customer")
+@app.route("/add_customer",  methods=['POST'])
 def new_customer():
     customer_json = request.get_json()
     return add_customer(customer_json)
 
-@app.route("/update_customer")
+@app.route("/update_customer",  methods=['POST'])
 def update_customer_info():
+    print('****update_customer_info.....')
     customer_json = request.get_json()
+    print(f'***customer_json: {customer_json}')
     return update_customer(customer_json)
 
 if __name__ == '__main__':
