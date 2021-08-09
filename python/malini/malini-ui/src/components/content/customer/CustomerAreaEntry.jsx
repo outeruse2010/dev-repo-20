@@ -84,8 +84,8 @@ const CustomerAreaEntry = ({selected_area, openAreaModal, toggleAreaModal}) => {
                         <ModalHeader header={action + ' Customer Area'} toggleModal={toggleAreaModal}/>
 
                         <form onSubmit={onSubmit} onReset={onReset} noValidate autoComplete="off">
-                            <TextField value={area_name} onChange={e=>{setArea_name(e.target.value);setAreaNameErr(false);}} error={areaNameErr} label="Area Name" fullWidth variant="outlined" required className={classes.field}/>
-                            <TextField value={description} onChange={e=>{setDescription(e.target.value);}} label="Description" multiline rows={3} fullWidth variant="outlined" className={classes.field}/> 
+                            <TextField value={area_name} onChange={e=>{setArea_name(e.target.value);setAreaNameErr(false);}} error={areaNameErr} label="Area Name" fullWidth variant="outlined" required className={classes.field}  size="small"/>
+                            <TextField value={description} onChange={e=>{setDescription(e.target.value);}} label="Description" multiline rows={3} fullWidth variant="outlined" className={classes.field} size="small"/> 
                             <Button type="submit" variant="contained" color="primary" size="small">{action}</Button>
                             {(action === 'Add New') && <Button type="reset" variant="contained" size="small" className={classes.btn}>Reset</Button>}
                             {(action === 'Update') && <Button onClick={toggleAreaModal} variant="contained" size="small" className={classes.btn}>Cancel</Button>}

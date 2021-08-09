@@ -13,15 +13,15 @@ from src.constants.app_const import *
 
 
 def customers():
-    print('find customers....')
+    log.info('find customers....')
     engine = db_engine()
     sql = f''' SELECT cast(cus_id as varchar) id, cast(cus_id as varchar) cus_id, 
                 cus_sr, first_name, mid_name, last_name, address, 
                 cast(area_id as varchar) area_id, email, phone, 
                comments, created_on, created_by, updated_on, updated_by, deleted
-               FROM {DB_SCHEMA}.customer '''
+               FROM {DB_SCHEMA}.customer where deleted = 'N' '''
     df = pd.read_sql(con=engine, sql=sql)
-    print(f'customers no of rows and columns selected : {df.shape}')
+    log.info(f'customers no of rows and columns selected : {df.shape}')
     return df
 
 
@@ -66,6 +66,30 @@ def update_customer(customer_json):
     except Exception as ex:
         msg_json['status'] = ERROR
         msg = f'''Failed to update customer [{first_name}] with Serial [{cus_sr}] !!! '''
+        traceback.print_exc()
+    log.info(msg)
+    msg_json["message"] = msg
+    return msg_json
+
+
+
+def delete_customer(customer_json):
+    cus_id = customer_json['cus_id']
+    cus_sr = customer_json['cus_sr']
+    first_name = customer_json['first_name']
+    log.info(f'delete_customer for cus_id: {cus_id}')
+    sql = f''' UPDATE {DB_SCHEMA}.customer set deleted='Y', updated_by = '{customer_json['updated_by']}',
+               updated_on = now() where cus_id = '{cus_id}' '''
+    msg = f'''Customer [#{cus_sr}, {first_name}] deleted !!! '''
+    msg_json = {}
+    try:
+        engine = db_engine()
+        with engine.begin() as con:
+            con.execute(sql)
+        msg_json['status'] = SUCCESS
+    except Exception as ex:
+        msg_json['status'] = ERROR
+        msg = f'''Failed to delete customer [#{cus_sr}, {first_name}] !!! '''
         traceback.print_exc()
     log.info(msg)
     msg_json["message"] = msg

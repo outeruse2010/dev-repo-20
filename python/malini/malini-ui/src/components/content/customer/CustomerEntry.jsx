@@ -39,6 +39,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [comments, setComments] = useState('');
+    const [due_amt, setDue_amt] = useState(0);
 
     const [openAreaModal, setOpenAreaModal] = useState(false);
 
@@ -73,6 +74,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
             setEmail(empty_value(selected_customer.email));
             setPhone(empty_value(selected_customer.phone));
             setComments(empty_value(selected_customer.comments));
+            setDue_amt(selected_customer.due_amt || 0);
         }
     }, [openCustomerModal]);
  
@@ -86,6 +88,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
         setEmail('');
         setPhone('');
         setComments('');
+        setDue_amt(0);
     }
 
     const onAreaChange = (selected_area_id) => {
@@ -106,7 +109,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
         
         let customer_json = { 'cus_sr':cus_sr, 'first_name':first_name, 'mid_name':mid_name, 'last_name':last_name, 
                             'address':address , 'area_id':area_id , 'email':email, 'phone':phone , 
-                            'comments':comments , 'cus_id':cus_id };
+                            'comments':comments ,'due_amt': due_amt, 'cus_id':cus_id };
         
         let do_update = false;
         if(action === 'Update'){
@@ -132,8 +135,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
 
     return (        
             <Modal open={openCustomerModal} onClose={toggleCustomerModal} 
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
+                size='small'
                 className={classes.modal}
                 BackdropComponent={Backdrop}>
                 <Fade in={openCustomerModal}>
@@ -141,22 +143,23 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
                         <ModalHeader header={action + ' Customer'} toggleModal={toggleCustomerModal}/>
 
                         <form onSubmit={onSubmit} onReset={onReset} noValidate autoComplete="off">                            
-                            <TextField value={cus_sr} onChange={e=>{setCus_sr(e.target.value);setCus_srErr(false);}} error={cus_srErr} label="Serial No." fullWidth variant="outlined" required className={classes.field}/>
-                            <TextField value={first_name} onChange={e=>{setFirst_name(e.target.value);setFirst_nameErr(false);}} error={first_nameErr} label="First Name" fullWidth variant="outlined" required className={classes.field}/>
-                            <TextField value={mid_name} onChange={e=>setMid_name(e.target.value)} label="Middle Name" fullWidth variant="outlined" className={classes.field}/>
-                            <TextField value={last_name} onChange={e=>setLast_name(e.target.value)} label="Last Name" fullWidth variant="outlined" className={classes.field}/>
-                            <TextField value={address} onChange={e=>{setAddress(e.target.value);setAddressErr(false);}} error={addressErr} label="Address" fullWidth variant="outlined" required className={classes.field}/>
+                            <TextField value={cus_sr} onChange={e=>{setCus_sr(e.target.value);setCus_srErr(false);}} error={cus_srErr} label="Serial No." fullWidth variant="outlined" required className={classes.field} size="small"/>
+                            <TextField value={first_name} onChange={e=>{setFirst_name(e.target.value);setFirst_nameErr(false);}} error={first_nameErr} label="First Name" fullWidth variant="outlined" required className={classes.field} size="small"/>
+                            <TextField value={mid_name} onChange={e=>setMid_name(e.target.value)} label="Middle Name" fullWidth variant="outlined" className={classes.field} size="small"/>
+                            <TextField value={last_name} onChange={e=>setLast_name(e.target.value)} label="Last Name" fullWidth variant="outlined" className={classes.field} size="small"/>
+                            <TextField value={address} onChange={e=>{setAddress(e.target.value);setAddressErr(false);}} error={addressErr} label="Address" fullWidth variant="outlined" required className={classes.field} size="small"/>
                             <Grid container spacing={1}>
                                 <Grid item xs={10} spacing={1}>
                                     <AutoCompleteComp label='Area Name' value_list={cus_areas} label_field={'area_name'} value_field={'area_id'} value={area_id} onComboValueChange = {onAreaChange} />
                                 </Grid>
                                 <Grid item xs={2} spacing={3}>
-                                    <Button onClick={toggleAreaModal} color="primary" size='large' className={classes.area_btn}>Add New Area</Button>
+                                    <Button onClick={toggleAreaModal} color="primary" size='small' className={classes.area_btn}>Add New Area</Button>
                                 </Grid>
                             </Grid>
-                            <TextField value={phone} onChange={e=>setPhone(e.target.value)} label="Phone" fullWidth variant="outlined" className={classes.field}/>
-                            <TextField value={email} onChange={e=>setEmail(e.target.value)} label="Email" fullWidth variant="outlined" className={classes.field}/>
-                            <TextField value={comments} onChange={e=>setComments(e.target.value)} label="Comments" fullWidth variant="outlined" className={classes.field}/>
+                            <TextField value={phone} onChange={e=>setPhone(e.target.value)} label="Phone" fullWidth variant="outlined" className={classes.field} size="small"/>
+                            <TextField type='email' value={email} onChange={e=>setEmail(e.target.value)} label="Email" fullWidth variant="outlined" className={classes.field} size="small"/>
+                            <TextField type='number' value={due_amt} onChange={e=>setDue_amt(e.target.value)} label="Due Amount" fullWidth variant="outlined" className={classes.field} size="small"/>
+                            <TextField value={comments} onChange={e=>setComments(e.target.value)} label="Comments" fullWidth variant="outlined" className={classes.field} multiline rows={2} size="small"/>
                             <Button type="submit" variant="contained" color="primary" size="small">{action}</Button>
                             {(action === 'Add New') && <Button type="reset" variant="contained" size="small" className={classes.btn}>Reset</Button>}
                             {(action === 'Update') && <Button onClick={toggleCustomerModal} variant="contained" size="small" className={classes.btn}>Cancel</Button>}
@@ -176,6 +179,9 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      overflow:'scroll',
+      marginTop: 10,
+      marginBottom: 5
     },
     paper: {
       backgroundColor: theme.palette.background.paper,
@@ -186,7 +192,8 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2)
     },
     btn: {marginLeft: theme.spacing(1)},
-    area_btn: {margin: theme.spacing(1)}
+    area_btn: {margin: theme.spacing(1)},
+    
   }));
 
 

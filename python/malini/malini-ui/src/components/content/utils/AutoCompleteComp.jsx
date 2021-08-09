@@ -21,6 +21,7 @@ const AutoCompleteComp = ({label,value_list, label_field, value_field, value, on
     return (
         <div className={classes.field}>
             <Autocomplete
+            size="small"
             style={{ width: '100%' }}
             options={option_list}
             classes={{ option: classes.option}}
@@ -38,6 +39,7 @@ const AutoCompleteComp = ({label,value_list, label_field, value_field, value, on
                     ...params.inputProps,
                     autoComplete: 'new-password', // disable autocomplete and autofill
                 }}
+                size="small"
                 />
             )}
             />

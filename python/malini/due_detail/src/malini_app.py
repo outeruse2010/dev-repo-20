@@ -123,10 +123,19 @@ def new_customer():
 
 @app.route("/update_customer",  methods=['POST'])
 def update_customer_info():
-    print('****update_customer_info.....')
-    customer_json = request.get_json()
-    print(f'***customer_json: {customer_json}')
-    return update_customer(customer_json)
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    return update_customer(input)
+
+@app.route("/remove_customer", methods=['POST'])
+def remove_customer():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    return delete_customer(input)
 
 if __name__ == '__main__':
     app.run(debug=True)

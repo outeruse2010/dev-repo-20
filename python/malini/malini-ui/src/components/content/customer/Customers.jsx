@@ -6,6 +6,7 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import {customer_atom, act_customer_atom, fetch_customers, delete_customer} from './customer_api';
 
+import {login_atom} from '../login/login_api';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import { dialog_atom } from '../utils/DialogComp';
 import DialogComp from '../utils/DialogComp';
@@ -14,11 +15,15 @@ import SnakbarComp from '../utils/SnakbarComp';
 import CustomerEntry from './CustomerEntry';
 
 const Customers = () => {
-    
+    const login_data = useRecoilValue(login_atom);
+    const user_name = login_data.user_name;
     const [customer_list, setCustomer_list] = useRecoilState(customer_atom);
     const [act_customer_res, setAct_customer_res] = useRecoilState(act_customer_atom);
     const [dialog_message, setDialog_message] = useRecoilState(dialog_atom);
     const [act_message, setAct_message] = useRecoilState(message_atom);
+    const [openCustomerModal, setOpenCustomerModal] = useState(false);
+    const [selected_customer, setSelected_customer] = useState(null);
+    
 
 
     useEffect(() => {
@@ -26,8 +31,7 @@ const Customers = () => {
             customer_res.then(data => setCustomer_list(data));
         }, []);
 
-    const [openCustomerModal, setOpenCustomerModal] = useState(false);
-    const [selected_customer, setSelected_customer] = useState(null);
+    
 
     const toggleCustomerModal = () => {        
         setOpenCustomerModal(!openCustomerModal);
@@ -53,9 +57,10 @@ const Customers = () => {
     const onDialogClose = (ans) => {
         if(ans === 'Y'){
             let cus_id = selected_customer['cus_id'];
+            let cus_sr = selected_customer['cus_sr'];
             let first_name = selected_customer['first_name'];
 
-            let customer_json = {cus_id, first_name, updated_by: 'Test'};
+            let customer_json = {cus_id, cus_sr, first_name, updated_by: user_name};
 
             const res = delete_customer(customer_json);
             res.then(data => {

@@ -56,8 +56,8 @@ const UserLogin = () => {
                         <Typography variant="h6" className={classes.field} >Sign In</Typography>                    
                                     
                         <form onSubmit={onSubmit} noValidate autoComplete="off">
-                            <TextField value={user_name} onChange={e=>{setUser_name(e.target.value);setUser_name_err(false);}} error={user_name_err} label="User Name" fullWidth variant="outlined" required className={classes.field}/>
-                            <TextField value={user_pass} onChange={e=>{setUser_pass(e.target.value);setUser_pass_err(false);}} error={user_pass_err}  label="Password" fullWidth variant="outlined" required className={classes.field}/> 
+                            <TextField size="small" value={user_name} onChange={e=>{setUser_name(e.target.value);setUser_name_err(false);}} error={user_name_err} label="User Name" fullWidth variant="outlined" required className={classes.field}/>
+                            <TextField size="small" value={user_pass} type='password' onChange={e=>{setUser_pass(e.target.value);setUser_pass_err(false);}} error={user_pass_err}  label="Password" fullWidth variant="outlined" required className={classes.field}/> 
                             <Button type="submit" variant="contained" color="primary" size="small">Login</Button>
                         </form>
 
