@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-import {Button, IconButton, Tooltip, Typography, Box}  from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import {Button, Typography, Box}  from '@material-ui/core';
 
 import {customer_atom, act_customer_atom, fetch_customers, delete_customer} from './customer_api';
 
@@ -14,6 +12,7 @@ import { message_atom } from '../utils/SnakbarComp';
 import SnakbarComp from '../utils/SnakbarComp';
 import CustomerEntry from './CustomerEntry';
 import { gridDateTime } from '../utils/app_utils';
+import GridActionMenu from '../utils/grid_action_menu';
 
 const Customers = () => {
     const login_data = useRecoilValue(login_atom);
@@ -25,14 +24,10 @@ const Customers = () => {
     const [openCustomerModal, setOpenCustomerModal] = useState(false);
     const [selected_customer, setSelected_customer] = useState(null);
     
-
-
     useEffect(() => {
             const customer_res = fetch_customers();
             customer_res.then(data => setCustomer_list(data));
         }, []);
-
-    
 
     const toggleCustomerModal = () => {        
         setOpenCustomerModal(!openCustomerModal);
@@ -75,28 +70,34 @@ const Customers = () => {
         }
     };
      
+    const cus_grid_menus = ['Edit', 'Delete'];
 
-    const renderEditButton = (params) => {
-        return (            
-            <IconButton onClick={() => {onEditClick(params.row);}}>
-                <Tooltip title="Edit" arrow><EditIcon fontSize="small" color='primary'/></Tooltip>
-            </IconButton>
-        );
-    }
+    const onGirdMenuClick = (menu_item, row) => {
+        switch (menu_item) {
+            case cus_grid_menus[0]: //Edit
+                onEditClick(row);
+                break;
+            case cus_grid_menus[1]: //Delete
+                onDeleteClick(row);
+                break;
+        
+            default:
+                break;
+        }
+    };
 
-    const renderDeleteButton = (params) => {
+    
+
+    const renderGridMenuButton = (params) => {
         return (            
-            <IconButton onClick={() => {onDeleteClick(params.row) }}>
-                <Tooltip title="Delete" arrow><DeleteIcon fontSize="small" color='secondary'/></Tooltip>
-            </IconButton>
+            <GridActionMenu menu_items={cus_grid_menus} row={params.row} onGirdMenuClick={onGirdMenuClick} />
         );
     }
 
     const rows = useRecoilValue(customer_atom);
 
     const columns = [
-        { field: "cus_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
-        ,{ field: "id", headerName: "Delete", renderCell: renderDeleteButton,  width: 120 }
+        { field: "", headerName: "", renderCell: renderGridMenuButton, width: 20 }
         ,{ field: 'cus_sr', headerName: 'Serial', width: 115 }
         ,{ field: 'full_name', headerName: 'Name', width: 200 }
         ,{ field: 'area_name', headerName: 'Location', width: 200 }
@@ -134,7 +135,3 @@ const Customers = () => {
 }
 
 export default Customers;
-
-
-
-
