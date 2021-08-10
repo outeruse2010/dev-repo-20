@@ -39,7 +39,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [comments, setComments] = useState('');
-    const [due_amt, setDue_amt] = useState(0);
+    const [mkt_amount, setMkt_amount] = useState('');
 
     const [openAreaModal, setOpenAreaModal] = useState(false);
 
@@ -74,7 +74,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
             setEmail(empty_value(selected_customer.email));
             setPhone(empty_value(selected_customer.phone));
             setComments(empty_value(selected_customer.comments));
-            setDue_amt(selected_customer.due_amt || 0);
+            setMkt_amount(selected_customer.mkt_amount || 0);
         }
     }, [openCustomerModal]);
  
@@ -88,7 +88,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
         setEmail('');
         setPhone('');
         setComments('');
-        setDue_amt(0);
+        setMkt_amount('');
     }
 
     const onAreaChange = (selected_area_id) => {
@@ -109,7 +109,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
         
         let customer_json = { 'cus_sr':cus_sr, 'first_name':first_name, 'mid_name':mid_name, 'last_name':last_name, 
                             'address':address , 'area_id':area_id , 'email':email, 'phone':phone , 
-                            'comments':comments ,'due_amt': due_amt, 'cus_id':cus_id };
+                            'comments':comments ,'mkt_amount': mkt_amount || 0, 'cus_id':cus_id };
         
         let do_update = false;
         if(action === 'Update'){
@@ -158,7 +158,10 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
                             </Grid>
                             <TextField value={phone} onChange={e=>setPhone(e.target.value)} label="Phone" fullWidth variant="outlined" className={classes.field} size="small"/>
                             <TextField type='email' value={email} onChange={e=>setEmail(e.target.value)} label="Email" fullWidth variant="outlined" className={classes.field} size="small"/>
-                            <TextField type='number' value={due_amt} onChange={e=>setDue_amt(e.target.value)} label="Due Amount" fullWidth variant="outlined" className={classes.field} size="small"/>
+                            
+                            {(action==='Add New') &&
+                            <TextField type='number' value={mkt_amount} onChange={e=>setMkt_amount(e.target.value)} label="Due Amount" fullWidth variant="outlined" className={classes.field} size="small"/>}
+
                             <TextField value={comments} onChange={e=>setComments(e.target.value)} label="Comments" fullWidth variant="outlined" className={classes.field} multiline rows={2} size="small"/>
                             <Button type="submit" variant="contained" color="primary" size="small">{action}</Button>
                             {(action === 'Add New') && <Button type="reset" variant="contained" size="small" className={classes.btn}>Reset</Button>}

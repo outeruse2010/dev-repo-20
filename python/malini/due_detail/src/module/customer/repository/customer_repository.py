@@ -25,22 +25,36 @@ def customers():
     return df
 
 
-def add_customer(customer_json):
-    log.info(f'add_customer....{customer_json}')
-    cus_sr = customer_json['cus_sr']
-    first_name = customer_json['first_name']
+def add_customer(cus_json):
+    log.info(f'add_customer....{cus_json}')
+    cus_sr = cus_json['cus_sr']
+    first_name = cus_json['first_name']
     msg = f'''Customer [{first_name}] with Serial [{cus_sr}] added !!! '''
+    status = ERROR
     msg_json = {}
     try:
-        df = pd.DataFrame([customer_json])
+        mkt_amount = cus_json['mkt_amount']
         engine = db_engine()
-        df.to_sql('customer', con=engine, schema=DB_SCHEMA, if_exists='append', index=False)
-        msg_json['status'] = SUCCESS
+        with engine.begin() as con:
+            df = pd.DataFrame([cus_json])
+            cus_df = df[['cus_sr', 'first_name', 'mid_name', 'last_name', 'address', 'area_id', 'email', 'phone', 'comments',
+                 'created_by']]
+            cus_df.to_sql('customer', con=con, schema=DB_SCHEMA, if_exists='append', index=False)
+            log.info(f'''customer [#{cus_sr}, {first_name}] inserted !!!''')
+            if float(mkt_amount) > 0:
+                sql = f'''select cus_id from {DB_SCHEMA}.customer where cus_sr = '{cus_sr}' '''
+                cus_id_df = pd.read_sql_query(sql=sql, con=con)
+                due_df = df[['mkt_amount', 'area_id', 'comments', 'created_by']]
+                due_df['cus_id'] = cus_id_df['cus_id']
+                due_df.to_sql('cus_due', con=con, schema=DB_SCHEMA, if_exists='append', index=False)
+                log.info(f'''customer [#{cus_sr}, {first_name}] due amount: [{mkt_amount}] inserted !!!''')
+            status = SUCCESS
+            log.info(f'''customer data insert committed !!!''')
     except Exception as ex:
-        msg_json['status'] = ERROR
         msg = f'''Failed to add customer [{first_name}] with Serial [{cus_sr}] !!! '''
         traceback.print_exc()
     log.info(msg)
+    msg_json['status'] = status
     msg_json["message"] = msg
     return msg_json
 
