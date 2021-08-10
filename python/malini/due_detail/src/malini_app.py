@@ -108,7 +108,7 @@ def fetch_customers():
     access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
     if not access_json['allowed']:
         return access_json
-    df = customers()
+    df = fetch_customer_dues()
     json_data = df.to_json(orient="records")
     return json_data
 

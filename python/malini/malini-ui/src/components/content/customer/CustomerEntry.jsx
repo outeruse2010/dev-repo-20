@@ -150,7 +150,7 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
                             <TextField value={address} onChange={e=>{setAddress(e.target.value);setAddressErr(false);}} error={addressErr} label="Address" fullWidth variant="outlined" required className={classes.field} size="small"/>
                             <Grid container spacing={1}>
                                 <Grid item xs={10} spacing={1}>
-                                    <AutoCompleteComp label='Area Name' value_list={cus_areas} label_field={'area_name'} value_field={'area_id'} value={area_id} onComboValueChange = {onAreaChange} />
+                                    <AutoCompleteComp label='Area Name' value_list={cus_areas} label_field={'area_name'} value_field={'area_id'} value={area_id} onComboValueChange = {onAreaChange} required={true}/>
                                 </Grid>
                                 <Grid item xs={2} spacing={3}>
                                     <Button onClick={toggleAreaModal} color="primary" size='small' className={classes.area_btn}>Add New Area</Button>

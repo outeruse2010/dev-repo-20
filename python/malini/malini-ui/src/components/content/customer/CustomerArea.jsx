@@ -11,6 +11,7 @@ import { dialog_atom } from '../utils/DialogComp';
 import DialogComp from '../utils/DialogComp';
 import { message_atom } from '../utils/SnakbarComp';
 import SnakbarComp from '../utils/SnakbarComp';
+import {gridDateTime} from '../utils/app_utils';
 
 const CustomerArea = () => {
 
@@ -80,7 +81,7 @@ const CustomerArea = () => {
     const renderEditButton = (params) => {
         return (            
             <IconButton onClick={() => {onEditClick(params.row);}}>
-                <Tooltip title="Edit" arrow><EditIcon fontSize="small"/></Tooltip>
+                <Tooltip title="Edit" arrow><EditIcon fontSize="small" color='primary'/></Tooltip>
             </IconButton>
         );
     }
@@ -88,11 +89,10 @@ const CustomerArea = () => {
     const renderDeleteButton = (params) => {
         return (            
             <IconButton onClick={() => {onDeleteClick(params.row) }}>
-                <Tooltip title="Delete" arrow><DeleteIcon fontSize="small"/></Tooltip>
+                <Tooltip title="Delete" arrow><DeleteIcon fontSize="small"  color='secondary'/></Tooltip>
             </IconButton>
         );
     }
-
 
     const columns = [
         { field: "area_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
@@ -100,9 +100,9 @@ const CustomerArea = () => {
         ,{ field: 'area_name', headerName: 'Area', width: 180 }
         ,{ field: 'description', headerName: 'Description', width: 300 }
         ,{ field: 'created_by', headerName: 'Created By', width: 200 }
-        ,{ field: 'created_on', headerName: 'Created On', width: 150 }
+        ,{ field: 'created_on', headerName: 'Created On', width: 160, valueGetter: gridDateTime }
         ,{ field: 'updated_by', headerName: 'Updated By', width: 200 }
-        ,{ field: 'updated_on', headerName: 'Updated On', width: 160 }
+        ,{ field: 'updated_on', headerName: 'Updated On', width: 160, valueGetter: gridDateTime }
         ];
 
     return (
@@ -116,7 +116,7 @@ const CustomerArea = () => {
             </Box>
 
             <div style={{ height: 500, width: '100%' }}>
-                <DataGrid rows={cus_area_list} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]}/>
+                <DataGrid rows={cus_area_list} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]} rowHeight={30} headerHeight={32}/>
             </div>
 
             <CustomerAreaEntry selected_area={selected_area} openAreaModal={openAreaModal} toggleAreaModal={toggleAreaModal} />

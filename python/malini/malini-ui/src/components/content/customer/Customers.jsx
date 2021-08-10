@@ -13,6 +13,7 @@ import DialogComp from '../utils/DialogComp';
 import { message_atom } from '../utils/SnakbarComp';
 import SnakbarComp from '../utils/SnakbarComp';
 import CustomerEntry from './CustomerEntry';
+import { gridDateTime } from '../utils/app_utils';
 
 const Customers = () => {
     const login_data = useRecoilValue(login_atom);
@@ -78,7 +79,7 @@ const Customers = () => {
     const renderEditButton = (params) => {
         return (            
             <IconButton onClick={() => {onEditClick(params.row);}}>
-                <Tooltip title="Edit" arrow><EditIcon fontSize="small"/></Tooltip>
+                <Tooltip title="Edit" arrow><EditIcon fontSize="small" color='primary'/></Tooltip>
             </IconButton>
         );
     }
@@ -86,7 +87,7 @@ const Customers = () => {
     const renderDeleteButton = (params) => {
         return (            
             <IconButton onClick={() => {onDeleteClick(params.row) }}>
-                <Tooltip title="Delete" arrow><DeleteIcon fontSize="small"/></Tooltip>
+                <Tooltip title="Delete" arrow><DeleteIcon fontSize="small" color='secondary'/></Tooltip>
             </IconButton>
         );
     }
@@ -95,17 +96,21 @@ const Customers = () => {
 
     const columns = [
         { field: "cus_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
-        ,{ field: "", headerName: "Delete", renderCell: renderDeleteButton,  width: 120 }
-        ,{ field: 'first_name', headerName: 'First Name', width: 180 }
-        ,{ field: 'last_name', headerName: 'Last Name', width: 300 }
+        ,{ field: "id", headerName: "Delete", renderCell: renderDeleteButton,  width: 120 }
+        ,{ field: 'cus_sr', headerName: 'Serial', width: 115 }
+        ,{ field: 'full_name', headerName: 'Name', width: 200 }
+        ,{ field: 'area_name', headerName: 'Location', width: 200 }
+        ,{ field: 'total_due', headerName: 'Due (Rs.)', width: 160 }
+        ,{ field: 'total_mkt_amount', headerName: 'Marketing (Rs.)', width: 160 }
+        ,{ field: 'total_credit_amt', headerName: 'Paid (Rs.)', width: 160 }
         ,{ field: 'address', headerName: 'Address', width: 200 }
         ,{ field: 'email', headerName: 'Email', width: 150 }
         ,{ field: 'phone', headerName: 'Phone', width: 200 }
         ,{ field: 'comments', headerName: 'Comments', width: 200 }
         ,{ field: 'created_by', headerName: 'Created By', width: 160 }
-        ,{ field: 'created_on', headerName: 'Created On', width: 160 }
+        ,{ field: 'created_on', headerName: 'Created On', width: 160, valueGetter: gridDateTime }
         ,{ field: 'updated_by', headerName: 'Updated By', width: 160 }
-        ,{ field: 'updated_on', headerName: 'Updated On', width: 160 }
+        ,{ field: 'updated_on', headerName: 'Updated On', width: 160, valueGetter: gridDateTime }
         ];
 
     return (
@@ -118,7 +123,7 @@ const Customers = () => {
             </Box>
 
             <div style={{ height: 500, width: '100%' }}>
-                <DataGrid rows={rows} columns={columns} disableSelectionOnClick rowsPerPageOptions={[]}/>
+                <DataGrid rows={rows} columns={columns} disableSelectionOnClick rowsPerPageOptions={[]} rowHeight={30} headerHeight={32} autoHeight={true}/>
             </div>
 
             <CustomerEntry selected_customer={selected_customer} openCustomerModal={openCustomerModal} toggleCustomerModal={toggleCustomerModal} />

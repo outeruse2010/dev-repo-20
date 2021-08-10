@@ -16,10 +16,27 @@ def customers():
     log.info('find customers....')
     engine = db_engine()
     sql = f''' SELECT cast(cus_id as varchar) id, cast(cus_id as varchar) cus_id, 
-                cus_sr, first_name, mid_name, last_name, address, 
+                cus_sr, first_name, mid_name, last_name,concat(first_name,' ', mid_name,' ', last_name) full_name ,address, 
                 cast(area_id as varchar) area_id, email, phone, 
                comments, created_on, created_by, updated_on, updated_by, deleted
                FROM {DB_SCHEMA}.customer where deleted = 'N' '''
+    df = pd.read_sql(con=engine, sql=sql)
+    log.info(f'customers no of rows and columns selected : {df.shape}')
+    return df
+
+def fetch_customer_dues():
+    log.info('fetch_customer_dues....')
+    sql = f''' SELECT cast(c.cus_id as varchar) id, cast(c.cus_id as varchar) cus_id, 
+            c.cus_sr, c.first_name, c.mid_name, c.last_name,concat(c.first_name,' ', c.mid_name,' ', c.last_name) full_name ,c.address, 
+            cast(c.area_id as varchar) area_id, c.email, c.phone, 
+            c.comments, c.created_on, c.created_by, c.updated_on, c.updated_by, c.deleted, 
+            d.total_mkt_amount, d.total_credit_amt, d.total_due, a.area_name
+            FROM {DB_SCHEMA}.cus_area a join {DB_SCHEMA}.customer c on  a.area_id = c.area_id 
+            LEFT JOIN 
+            (SELECT cus_id, sum(mkt_amount) total_mkt_amount, sum(credit_amt) total_credit_amt, (sum(mkt_amount) - sum(credit_amt)) total_due
+            FROM {DB_SCHEMA}.cus_due where deleted = 'N' group by cus_id ) d
+            ON c.cus_id = d.cus_id and c.deleted = 'N' '''
+    engine = db_engine()
     df = pd.read_sql(con=engine, sql=sql)
     log.info(f'customers no of rows and columns selected : {df.shape}')
     return df
