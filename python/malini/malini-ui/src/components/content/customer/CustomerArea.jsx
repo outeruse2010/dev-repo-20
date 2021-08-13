@@ -6,6 +6,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import CustomerAreaEntry from './CustomerAreaEntry';
 import {cus_area_atom, act_cus_area_atom, fetch_customer_areas, delete_cus_area} from './customer_api';
 
+import {login_atom} from '../login/login_api';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import { dialog_atom } from '../utils/DialogComp';
 import DialogComp from '../utils/DialogComp';
@@ -14,6 +15,9 @@ import SnakbarComp from '../utils/SnakbarComp';
 import {gridDateTime} from '../utils/app_utils';
 
 const CustomerArea = () => {
+
+    const login_data = useRecoilValue(login_atom);
+    const user_name = login_data.user_name;
 
     const [cus_area_list, setCus_area_list] = useRecoilState(cus_area_atom);
     const [act_cus_area_res, setAct_cus_area_res] = useRecoilState(act_cus_area_atom);
@@ -62,7 +66,7 @@ const CustomerArea = () => {
             let area_id = selected_area['area_id'];
             let area_name = selected_area['area_name'];
 
-            let cus_area_json = {area_id, area_name, updated_by: 'Test'};
+            let cus_area_json = {area_id, area_name, updated_by: user_name};
 
             const res = delete_cus_area(cus_area_json);
             res.then(data => {

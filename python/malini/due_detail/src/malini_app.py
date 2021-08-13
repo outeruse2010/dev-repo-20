@@ -137,5 +137,44 @@ def remove_customer():
         return access_json
     return delete_customer(input)
 
+# =============== customer due detail     =====================
+
+from src.module.due_detail.repository.cus_due_repository import *
+
+@app.route("/fetch_customer_dues",  methods=['POST'])
+def find_customer_dues():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    df = fetch_due_detail_by_cus_id(input['cus_id'])
+    json_data = df.to_json(orient="records")
+    return json_data
+
+@app.route("/add_customer_due",  methods=['POST'])
+def add_customer_due():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    trim_json(input, ['user_id', 'log_in_code'])
+    return add_due_amount(input)
+
+@app.route("/update_customer_due",  methods=['POST'])
+def update_customer_due():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    return update_due_amount(input)
+
+@app.route("/remove_customer_due", methods=['POST'])
+def remove_customer_due():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    return delete_due_amount(input)
+
 if __name__ == '__main__':
     app.run(debug=True)

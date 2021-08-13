@@ -12,21 +12,23 @@ from src.config.log_config import log
 from src.constants.app_const import *
 
 
-# SELECT cus_due_id, cus_id, mkt_amount, credit_amt, due_amt, "comments", created_on, created_by, updated_on, updated_by, deleted
+# SELECT cus_due_id, cus_id, mkt_amount, credit_amt,  "comments", created_on, created_by, updated_on, updated_by, deleted
 # FROM malini_schema.cus_due;
 
 def fetch_due_detail_by_cus_id(cus_id):
     log.info('fetch_due_detail')
     engine = db_engine()
-    sql = f'''SELECT cast(cus_due_id as varchar) cus_due_id, cast(cus_id as varchar) cus_id, mkt_amount, credit_amt, "comments", 
-            created_on, created_by, updated_on, updated_by, deleted WHERE cus_id = '{cus_id}' '''
+    sql = f'''SELECT cast(cus_due_id as varchar) id, cast(cus_due_id as varchar) cus_due_id, cast(cus_id as varchar) cus_id, mkt_amount, credit_amt, mkt_pay_date,
+             comments, created_on, created_by, updated_on, updated_by, deleted FROM {DB_SCHEMA}.cus_due WHERE cus_id = '{cus_id}' '''
     df = pd.read_sql_query(con=engine, sql=sql)
-    active_due_rows_df = df.loc[df['deleted']=='N', ['mkt_amount', 'credit_amt']]
-    total_mkt_amount = active_due_rows_df['mkt_amount'].sum()
-    total_credit_amt = active_due_rows_df['credit_amt'].sum()
-    total_due = total_mkt_amount - total_credit_amt
-    log.info(f'cus_id: [{cus_id}], total_due: [{total_due}]')
-    return df, total_due
+
+    # active_due_rows_df = df.loc[df['deleted']=='N', ['mkt_amount', 'credit_amt']]
+    # total_mkt_amount = active_due_rows_df['mkt_amount'].sum()
+    # total_credit_amt = active_due_rows_df['credit_amt'].sum()
+    # total_due = total_mkt_amount - total_credit_amt
+    # log.info(f'cus_id: [{cus_id}], total_due: [{total_due}]')
+
+    return df
 
 def add_due_amount(due_json):
     log.info('add_due_amount')
@@ -57,7 +59,8 @@ def update_due_amount(due_json):
         credit_amt = due_json['credit_amt']
         cus_due_id = due_json['cus_due_id']
 
-        sql = f'''UPDATE {DB_SCHEMA}.cus_due set mkt_amount = '{mkt_amount}', credit_amt= '{credit_amt}'
+        sql = f'''UPDATE {DB_SCHEMA}.cus_due set mkt_amount = '{mkt_amount}', credit_amt= '{credit_amt}',
+                mkt_pay_date= {due_json['mkt_pay_date']},updated_by = '{due_json['updated_by']}', updated_on = now()
                 WHERE cus_due_id = '{cus_due_id}' '''
         engine = db_engine()
         with engine.begin() as con:
@@ -72,6 +75,25 @@ def update_due_amount(due_json):
     msg_json["message"] = msg
     return msg_json
 
+def delete_due_amount(due_json):
+    cus_due_id = due_json['cus_due_id']
+    log.info(f'delete_due_amount for cus_due_id: {cus_due_id}')
+    sql = f''' UPDATE {DB_SCHEMA}.cus_due set deleted='Y', updated_by = '{due_json['updated_by']}',
+               updated_on = now() where cus_due_id = '{cus_due_id}' '''
+    msg = f'''Due amount row deleted !!! '''
+    msg_json = {}
+    try:
+        engine = db_engine()
+        with engine.begin() as con:
+            con.execute(sql)
+        msg_json['status'] = SUCCESS
+    except Exception as ex:
+        msg_json['status'] = ERROR
+        msg = f'''Failed to delete due detail !!! '''
+        traceback.print_exc()
+    log.info(msg)
+    msg_json["message"] = msg
+    return msg_json
 
 def calculate_due(cus_id):
     log.info(f'calculate_due for cus_id: [{cus_id}]')

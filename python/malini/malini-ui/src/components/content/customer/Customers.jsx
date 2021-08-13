@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import {Button, Typography, Box}  from '@material-ui/core';
 
@@ -13,6 +14,7 @@ import SnakbarComp from '../utils/SnakbarComp';
 import CustomerEntry from './CustomerEntry';
 import { gridDateTime } from '../utils/app_utils';
 import GridActionMenu from '../utils/grid_action_menu';
+import DueDetail from '../dues/due_detail';
 
 const Customers = () => {
     const login_data = useRecoilValue(login_atom);
@@ -23,12 +25,17 @@ const Customers = () => {
     const [act_message, setAct_message] = useRecoilState(message_atom);
     const [openCustomerModal, setOpenCustomerModal] = useState(false);
     const [selected_customer, setSelected_customer] = useState(null);
+    const [openDueDetailModal, setOpenDueDetailModal] = useState(false);
     
     useEffect(() => {
             const customer_res = fetch_customers();
             customer_res.then(data => setCustomer_list(data));
         }, []);
 
+    const toggleDueDetailModal = () => {
+        setOpenDueDetailModal(!openDueDetailModal);
+    };
+    
     const toggleCustomerModal = () => {        
         setOpenCustomerModal(!openCustomerModal);
     };
@@ -39,14 +46,12 @@ const Customers = () => {
     }
 
     const onDeleteClick = (row) => {
-        setSelected_customer(row);
         let title = 'Delete Customer';
-        let content = 'Are you sure to DELETE customer [' + row['first_name'] + '] ?';
+        let content = 'Are you sure to DELETE customer ['+row['cus_sr'] + ', ' + row['full_name'] + '] ?';
         setDialog_message({title, content});
     };
 
-    const onEditClick = (row) => {
-        setSelected_customer(row);
+    const onEditClick = () => {
         setOpenCustomerModal(true);
     };
 
@@ -70,15 +75,20 @@ const Customers = () => {
         }
     };
      
-    const cus_grid_menus = ['Edit', 'Delete'];
+    const cus_grid_menus = ['Edit', 'Delete', 'Marketing Detail'];
 
     const onGirdMenuClick = (menu_item, row) => {
+        setSelected_customer(row);
         switch (menu_item) {
             case cus_grid_menus[0]: //Edit
-                onEditClick(row);
+                // onEditClick();
+                setOpenCustomerModal(true);
                 break;
             case cus_grid_menus[1]: //Delete
                 onDeleteClick(row);
+                break;
+            case cus_grid_menus[2]: //Marketing Detail
+                toggleDueDetailModal();
                 break;
         
             default:
@@ -129,9 +139,27 @@ const Customers = () => {
 
             <CustomerEntry selected_customer={selected_customer} openCustomerModal={openCustomerModal} toggleCustomerModal={toggleCustomerModal} />
             <DialogComp onDialogClose={(ans)=> onDialogClose(ans)}/>
-            <SnakbarComp />
+            <DueDetail selected_customer={selected_customer} openDueDetailModal={openDueDetailModal} toggleDueDetailModal={toggleDueDetailModal}/>
+            
+             <SnakbarComp />
         </div>
     );
 }
 
 export default Customers;
+
+const useStyles = makeStyles((theme) => ({
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow:'scroll',
+      marginTop: 10,
+      marginBottom: 5
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    }
+  }));
