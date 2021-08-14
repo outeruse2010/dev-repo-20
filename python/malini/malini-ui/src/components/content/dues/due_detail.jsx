@@ -6,7 +6,7 @@ import Fade from '@material-ui/core/Fade';
 import ModalHeader from '../utils/ModalHeader';
 
 import { DataGrid } from '@material-ui/data-grid';
-import {Button, IconButton, Tooltip, Typography, Box}  from '@material-ui/core';
+import {Button, IconButton, Tooltip, Typography, Box, Paper}  from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -18,7 +18,7 @@ import { dialog_atom } from '../utils/DialogComp';
 import DialogComp from '../utils/DialogComp';
 import { message_atom } from '../utils/SnakbarComp';
 import SnakbarComp from '../utils/SnakbarComp';
-import {gridDateTime} from '../utils/app_utils';
+import {gridDate, gridDateTime} from '../utils/app_utils';
 import DueDetailEntry from './due_detail_entry';
 
 
@@ -54,9 +54,8 @@ const DueDetail = ({selected_customer, openDueDetailModal,toggleDueDetailModal})
     const onDialogClose = (ans) => {
         if(ans === 'Y'){
             let cus_id = selected_customer['cus_id'];
-            let cus_due_id = setSeleted_mkt_due_row['cus_due_id'];
-            let due_json = {cus_due_id,  updated_by: user_name};
-
+            let cus_due_id = selected_mkt_due_row['cus_due_id'];
+            let due_json = {cus_due_id,  'updated_by': user_name};
             const res = delete_cus_due(due_json);
             res.then(data => {
                 setAct_cus_due_atom_res(data);
@@ -113,7 +112,7 @@ const DueDetail = ({selected_customer, openDueDetailModal,toggleDueDetailModal})
         ,{ field: "", headerName: "Delete", renderCell: renderDeleteButton,  width: 120 }
         ,{ field: 'mkt_amount', headerName: 'Buy Amt', width: 180 }
         ,{ field: 'credit_amt', headerName: 'Payment', width: 180 }
-        ,{ field: 'mkt_pay_date', headerName: 'Marketing/Payment Dt', width: 200 }
+        ,{ field: 'mkt_pay_date', headerName: 'Marketing/Payment Dt', width: 200, valueGetter: gridDate }
         ,{ field: 'comments', headerName: 'Comments', width: 300 }
         ,{ field: 'created_by', headerName: 'Created By', width: 200 }
         ,{ field: 'created_on', headerName: 'Created On', width: 160, valueGetter: gridDateTime }
@@ -122,10 +121,12 @@ const DueDetail = ({selected_customer, openDueDetailModal,toggleDueDetailModal})
         ];
     
     return (
-        <Modal open={openDueDetailModal} onClose={toggleDueDetailModal} size='medium' className={classes.modal}  BackdropComponent={Backdrop}>
+        <Modal open={openDueDetailModal} onClose={toggleDueDetailModal} className={classes.modal}  BackdropComponent={Backdrop}>
             <Fade in={openDueDetailModal}>
                 <div className={classes.paper}>
-                    <ModalHeader header='Due Details' toggleModal={toggleDueDetailModal}/>
+                    <ModalHeader header='Payment/Due Details' toggleModal={toggleDueDetailModal}/>
+                    { cus_detail(selected_customer, classes) }
+
                     <SnakbarComp />
                     <Box display='flex' p={1} >
                         <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customer Marketing</Typography></Box>
@@ -133,10 +134,11 @@ const DueDetail = ({selected_customer, openDueDetailModal,toggleDueDetailModal})
                             <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined"> Add New</Button>
                         </Box>
                     </Box>
-                    <div style={{ height: 500, width: '100%' }}>
+                    <div style={{ height: 300, width: '100%' }}>
                         <DataGrid rows={due_list} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]} rowHeight={30} headerHeight={32}/>
                     </div>
 
+                    <DialogComp onDialogClose={(ans)=> onDialogClose(ans)}/>
                     <DueDetailEntry selected_customer={selected_customer} selected_mkt_due_row={selected_mkt_due_row} edit_marketing={edit_marketing} toggleEdit_marketingModal = {toggleEdit_marketingModal} />
                 </div>
             </Fade>
@@ -145,6 +147,24 @@ const DueDetail = ({selected_customer, openDueDetailModal,toggleDueDetailModal})
 };
 
 export default DueDetail;
+
+const cus_detail = (cus, classes) => {
+    const cus_row = (field, value) => (
+        <Box display='flex' flexDirection='row' className={classes.box_txt}>
+                <Box p={1}>{field}</Box> <Box p={1}>: </Box> <Box p={1}> {value}</Box>
+            </Box>
+    );
+    if (cus) {
+    return (
+        <div>
+            { cus_row('Sr. No', cus.cus_sr) }
+            { cus_row('Name', cus.full_name) }
+            { cus_row('Address', cus.address) }
+            { cus_row('Total Due', cus.total_due) }
+        </div>
+    );
+    }
+}
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -159,12 +179,14 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.background.paper,
       boxShadow: theme.shadows[5],
       padding: theme.spacing(2, 4, 3),
+      width:'80%'
     },
     field:{
         marginBottom: theme.spacing(2)
     },
     btn: {marginLeft: theme.spacing(1)},
     area_btn: {margin: theme.spacing(1)},
+    box_txt:{height: '16px', fontSize: 13, color: '#4527a0', marginLeft: theme.spacing(1)}
     
   }));
 

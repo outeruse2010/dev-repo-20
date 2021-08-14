@@ -7,3 +7,11 @@ export const gridDateTime = (params) =>{
     let value = row[field] ? moment(row[field]).format(format) : '';    
     return value;
 };
+
+export const gridDate = (params) =>{
+    const row = params.row;
+    const field = params.field;
+    const format = "DD-MMM-YYYY";
+    let value = row[field] ? moment(row[field]).format(format) : '';    
+    return value;
+};

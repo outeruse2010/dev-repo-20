@@ -6,9 +6,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
 import {TextField, Button}  from '@material-ui/core';
-// import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
-// import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-
+import moment from 'moment';
 import {login_atom} from '../login/login_api';
 import {useRecoilValue, useRecoilState} from 'recoil';
 
@@ -34,12 +32,16 @@ const DueDetailEntry = ({selected_customer, selected_mkt_due_row, edit_marketing
     const [act_message, setAct_message] = useRecoilState(message_atom);
     
     useEffect(()=>{
-        console.log('***selected_mkt_due_row: ',selected_mkt_due_row);
         onReset();
         if(selected_mkt_due_row){
             setCus_due_id(selected_mkt_due_row['cus_due_id']);
             setMkt_amount(selected_mkt_due_row['mkt_amount']);
             setCredit_amt(selected_mkt_due_row['credit_amt']);
+            let dt = selected_mkt_due_row['mkt_pay_date'];
+            if(dt){
+                let val = moment(dt).format('YYYY-MM-DD');
+                setMkt_pay_date(val);
+            }
             setComments(selected_mkt_due_row['comments']);
         }
         
@@ -50,11 +52,19 @@ const DueDetailEntry = ({selected_customer, selected_mkt_due_row, edit_marketing
     const onSubmit = (e) => {
         e.preventDefault();
         let cus_id = selected_customer['cus_id'];
-        const due_json = {cus_id,  'mkt_amount': mkt_amount, 'credit_amt':credit_amt, 'comments':comments};
+        
+        const due_json = {cus_id,  'mkt_amount': mkt_amount || 0, 'credit_amt':credit_amt || 0,'mkt_pay_date':mkt_pay_date, 'comments':comments};
+        if(selected_mkt_due_row){
+            due_json['cus_due_id']= selected_mkt_due_row['cus_due_id'];
+            due_json['updated_by']= user_name;
+        }else{
+            due_json['created_by']= user_name;
+        }
         const res = add_update_cus_due(due_json);
         res.then(data => {
             setAct_cus_due_atom_res(data);
             if(data.status === 'success'){
+                toggleEdit_marketingModal(false);
                 const cus_due_res = fetch_customer_dues({cus_id});
                 cus_due_res.then(cus_dues => setDue_list(cus_dues));
             }            
@@ -67,13 +77,13 @@ const DueDetailEntry = ({selected_customer, selected_mkt_due_row, edit_marketing
         setMkt_amount('');
         setCredit_amt('');
         setComments('');
+        setMkt_pay_date(null);
     };
 
+    
     return ( 
         <Modal open={edit_marketing} onClose={toggleEdit_marketingModal} 
-        size='small'
-        className={classes.modal}
-        BackdropComponent={Backdrop}>
+                    size='small' className={classes.modal} BackdropComponent={Backdrop}>
         <Fade in={edit_marketing}>
             <div className={classes.paper}>
                 <ModalHeader header={action + ' Marketing'} toggleModal={toggleEdit_marketingModal}/>
@@ -81,14 +91,8 @@ const DueDetailEntry = ({selected_customer, selected_mkt_due_row, edit_marketing
                 <form onSubmit={onSubmit} onReset={onReset} noValidate autoComplete="off"> 
                     <TextField type='number' value={mkt_amount} onChange={e=>setMkt_amount(e.target.value)} label="Marketing (Rs.)" fullWidth variant="outlined" className={classes.field} size="small"/>
                     <TextField type='number' value={credit_amt} onChange={e=>setCredit_amt(e.target.value)} label="Payment (Rs.)" fullWidth variant="outlined" className={classes.field} size="small"/>
-                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DesktopDatePicker label="Marketing/Payment Date" value={mkt_pay_date} onChange={(newValue) => {
-                        console.log('****newValue: ',newValue);
-                        setValue(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
-                    />
-                    </LocalizationProvider> */}
+                    <TextField type="date"  value={mkt_pay_date} onChange={(e) => setMkt_pay_date(e.target.value)} 
+                           label="Marketing/Payment Date (dd/mm/yyyy)" variant="outlined" className={classes.field} fullWidth  InputLabelProps={{ shrink: true, }} size="small"/>
                     <TextField value={comments} onChange={e=>setComments(e.target.value)} label="Comments" fullWidth variant="outlined" className={classes.field} multiline rows={2} size="small"/>
                     <Button type="submit" variant="contained" color="primary" size="small">{action}</Button>
                     {(action === 'Add New') && <Button type="reset" variant="contained" size="small" className={classes.btn}>Reset</Button>}
