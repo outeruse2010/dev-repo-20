@@ -176,5 +176,89 @@ def remove_customer_due():
         return access_json
     return delete_due_amount(input)
 
+
+# =============== expense type detail     =====================
+
+from src.module.sale_expense.repository.expense_type_repository import *
+
+@app.route("/fetch_expense_types",  methods=['POST'])
+def fetch_expense_types():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    df = expense_types()
+    json_data = df.to_json(orient="records")
+    return json_data
+
+
+@app.route("/new_expense_type",  methods=['POST'])
+def add_new_expense_type():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    trim_json(input, ['user_id', 'log_in_code'])
+    return add_new_expense_type(input)
+
+
+@app.route("/update_expense_type",  methods=['POST'])
+def update_existing_expense_type():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    return update_expense_type(input)
+
+@app.route("/remove_expense_type", methods=['POST'])
+def remove_expense_type():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    return delete_expense_type(input)
+
+
+# =============== sale expense detail     =====================
+
+from src.module.sale_expense.repository.daily_sale_expense_repository import *
+
+@app.route("/fetch_daily_sale_expenses",  methods=['POST'])
+def fetch_daily_sale_expenses():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    df = daily_sale_expenses()
+    json_data = df.to_json(orient="records")
+    return json_data
+
+
+@app.route("/new_daily_sale_expense",  methods=['POST'])
+def add_new_daily_sale_expense():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    trim_json(input, ['user_id', 'log_in_code'])
+    return add_daily_sale_expense(input)
+
+
+@app.route("/update_daily_sale_expense",  methods=['POST'])
+def update_existing_daily_sale_expense():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    return update_daily_sale_expense(input)
+
+@app.route("/remove_daily_sale_expense", methods=['POST'])
+def remove_daily_sale_expense():
+    input = request.get_json()
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
+    if not access_json['allowed']:
+        return access_json
+    return delete_daily_sale_expense(input)
+
 if __name__ == '__main__':
     app.run(debug=True)
