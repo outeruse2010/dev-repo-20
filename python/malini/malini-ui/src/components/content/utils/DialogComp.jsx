@@ -15,9 +15,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
 
-const DialogComp = ({onDialogClose}) => {
-    
-  const [open, setOpen] = React.useState(false);
+const DialogComp = ({show,onDialogClose}) => {
+  
   const res = useRecoilValue(dialog_atom);
   const [dialog_message, setDialog_message] = useRecoilState(dialog_atom);
 
@@ -27,23 +26,17 @@ const DialogComp = ({onDialogClose}) => {
         content = res.content;
     }
 
-    useEffect(() => {
-         const show = content ? true : false;
-         setOpen(show);
-    }, [content]);
-
     const handleClose = (ans = 'N') => {
         if(ans === 'N'){
             setDialog_message({});
         }
-        onDialogClose(ans);
-        setOpen(false);        
+        onDialogClose(ans); 
       };
 
 
     return (
         <Dialog
-            open={open}
+            open={show}
             TransitionComponent={Transition}
             keepMounted
             onClose={handleClose}

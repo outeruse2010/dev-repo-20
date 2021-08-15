@@ -19,6 +19,8 @@ import DueDetail from '../dues/due_detail';
 const Customers = () => {
     const login_data = useRecoilValue(login_atom);
     const user_name = login_data.user_name;
+
+    const [openDia, setOpenDia] = useState(false);
     const [customer_list, setCustomer_list] = useRecoilState(customer_atom);
     const [act_customer_res, setAct_customer_res] = useRecoilState(act_customer_atom);
     const [dialog_message, setDialog_message] = useRecoilState(dialog_atom);
@@ -49,6 +51,7 @@ const Customers = () => {
         let title = 'Delete Customer';
         let content = 'Are you sure to DELETE customer ['+row['cus_sr'] + ', ' + row['full_name'] + '] ?';
         setDialog_message({title, content});
+        setOpenDia(true);
     };
 
     const onEditClick = () => {
@@ -73,6 +76,7 @@ const Customers = () => {
                 setAct_message(data);
             });
         }
+        setOpenDia(false);
     };
      
     const cus_grid_menus = ['Edit', 'Delete', 'Marketing Detail'];
@@ -138,7 +142,7 @@ const Customers = () => {
             </div>
 
             <CustomerEntry selected_customer={selected_customer} openCustomerModal={openCustomerModal} toggleCustomerModal={toggleCustomerModal} />
-            <DialogComp onDialogClose={(ans)=> onDialogClose(ans)}/>
+            <DialogComp show={openDia} onDialogClose={(ans)=> onDialogClose(ans)}/>
             <DueDetail selected_customer={selected_customer} openDueDetailModal={openDueDetailModal} toggleDueDetailModal={toggleDueDetailModal}/>
             
              <SnakbarComp />

@@ -199,7 +199,7 @@ def add_new_expense_type():
     if not access_json['allowed']:
         return access_json
     trim_json(input, ['user_id', 'log_in_code'])
-    return add_new_expense_type(input)
+    return add_expense_type(input)
 
 
 @app.route("/update_expense_type",  methods=['POST'])

@@ -27,6 +27,7 @@ const DueDetail = ({selected_customer, openDueDetailModal,toggleDueDetailModal})
     const login_data = useRecoilValue(login_atom);
     const user_name = login_data.user_name;
 
+    const [openDia, setOpenDia] = useState(false);
     const [due_list, setDue_list] = useRecoilState(cus_due_atom);
     const [act_cus_due_atom_res, setAct_cus_due_atom_res] = useRecoilState(act_cus_due_atom);
     const [act_message, setAct_message] = useRecoilState(message_atom);
@@ -66,6 +67,7 @@ const DueDetail = ({selected_customer, openDueDetailModal,toggleDueDetailModal})
                 setAct_message(data);
             });
         }
+        setOpenDia(false);
     };
 
     const onDeleteClick = (row) => {
@@ -73,6 +75,7 @@ const DueDetail = ({selected_customer, openDueDetailModal,toggleDueDetailModal})
         let title = 'Delete Due Detail Row';
         let content = 'Are you sure to DELETE row with buy Amt [' + row['mkt_amount'] + '] and payment [' + row['credit_amt'] + '] ?';
         setDialog_message({title, content});
+        setOpenDia(true);
     };
 
     const onAddNewClick = () => {
@@ -138,7 +141,7 @@ const DueDetail = ({selected_customer, openDueDetailModal,toggleDueDetailModal})
                         <DataGrid rows={due_list} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]} rowHeight={30} headerHeight={32}/>
                     </div>
 
-                    <DialogComp onDialogClose={(ans)=> onDialogClose(ans)}/>
+                    <DialogComp show={openDia} onDialogClose={(ans)=> onDialogClose(ans)}/>
                     <DueDetailEntry selected_customer={selected_customer} selected_mkt_due_row={selected_mkt_due_row} edit_marketing={edit_marketing} toggleEdit_marketingModal = {toggleEdit_marketingModal} />
                 </div>
             </Fade>

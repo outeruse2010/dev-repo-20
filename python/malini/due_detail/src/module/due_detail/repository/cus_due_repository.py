@@ -62,11 +62,11 @@ def update_due_amount(due_json):
         cus_due_id = due_json['cus_due_id']
 
         sql = f'''UPDATE {DB_SCHEMA}.cus_due set mkt_amount = '{mkt_amount}', credit_amt= '{credit_amt}',
-                mkt_pay_date= :mkt_pay_date, updated_by = '{due_json['updated_by']}', updated_on = now()
+                mkt_pay_date= '{due_json['mkt_pay_date']}', updated_by = '{due_json['updated_by']}', updated_on = now()
                 WHERE cus_due_id = '{cus_due_id}' '''
         engine = db_engine()
         with engine.begin() as con:
-            con.execute(sql, {'mkt_pay_date': due_json['mkt_pay_date']})
+            con.execute(sql)
         msg = f'''Marketing detail updated !!! '''
         msg_json['status'] = SUCCESS
     except Exception as ex:

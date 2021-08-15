@@ -19,6 +19,7 @@ const CustomerArea = () => {
     const login_data = useRecoilValue(login_atom);
     const user_name = login_data.user_name;
 
+    const [openDia, setOpenDia] = useState(false);
     const [cus_area_list, setCus_area_list] = useRecoilState(cus_area_atom);
     const [act_cus_area_res, setAct_cus_area_res] = useRecoilState(act_cus_area_atom);
     const [dialog_message, setDialog_message] = useRecoilState(dialog_atom);
@@ -54,6 +55,7 @@ const CustomerArea = () => {
         let title = 'Delete Customer Area';
         let content = 'Are you sure to DELETE area [' + row['area_name'] + '] ?';
         setDialog_message({title, content});
+        setOpenDia(true);
     };
 
     const onEditClick = (row) => {
@@ -79,6 +81,7 @@ const CustomerArea = () => {
                 setAct_message(data);
             });
         }
+        setOpenDia(false);
     };
      
 
@@ -124,7 +127,7 @@ const CustomerArea = () => {
             </div>
 
             <CustomerAreaEntry selected_area={selected_area} openAreaModal={openAreaModal} toggleAreaModal={toggleAreaModal} />
-            <DialogComp onDialogClose={(ans)=> onDialogClose(ans)}/>
+            <DialogComp show={openDia} onDialogClose={(ans)=> onDialogClose(ans)}/>
                         
         </div>
     );
