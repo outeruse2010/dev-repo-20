@@ -8,7 +8,6 @@ import {useRecoilValue} from 'recoil';
 
 import MenuHeader from './menu_header';
 import UserLogin from '../content/login/user_login';
-import DueDetail from '../content/dues/due_detail';
 import Customers from '../content/customer/Customers';
 import CustomerArea from '../content/customer/CustomerArea';
 

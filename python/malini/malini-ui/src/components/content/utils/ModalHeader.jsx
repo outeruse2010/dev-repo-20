@@ -1,31 +1,23 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-
 const ModalHeader = ({header, toggleModal}) => {
     const classes = useStyles();
-
     return (
-        <Box display="flex" p={1} bgcolor="background.paper">
-            <Box p={1} width="100%">
-                <Typography variant="h6" >{header}</Typography>
-            </Box>
-            <Box p={1} flexShrink={1}>
-                <IconButton onClick={toggleModal} ><CloseIcon color='primary' /></IconButton>
-            </Box>
-        </Box>
+        <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.modal_title}>
+            <Typography variant="h6"> {header} </Typography>
+            <IconButton aria-label="close" onClick={toggleModal}><CloseIcon color='primary' /></IconButton>
+        </Grid>
     )
 }
 
 export default ModalHeader;
 
-const useStyles = makeStyles((theme) => ({
-    
-    field:{
-        marginBottom: theme.spacing(1)
-    }
-  }));
+const useStyles = makeStyles((theme) => ({ 
+    modal_title: {marginBottom: theme.spacing(1)}
+ }));
+ 

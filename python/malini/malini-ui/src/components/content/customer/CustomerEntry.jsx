@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+import AddIcon from '@material-ui/icons/Add';
 
 import {TextField, Button}  from '@material-ui/core';
 
@@ -120,7 +121,6 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
         
         const res = add_update_customer(customer_json);
         res.then(data => {
-            // console.log('***add res: ',data);
             setAct_customer_res(data);
             if(data.status === 'success'){
                 const customer_res = fetch_customers();
@@ -149,11 +149,11 @@ const CustomerEntry = ({selected_customer, openCustomerModal, toggleCustomerModa
                             <TextField value={last_name} onChange={e=>setLast_name(e.target.value)} label="Last Name" fullWidth variant="outlined" className={classes.field} size="small"/>
                             <TextField value={address} onChange={e=>{setAddress(e.target.value);setAddressErr(false);}} error={addressErr} label="Address" fullWidth variant="outlined" required className={classes.field} size="small"/>
                             <Grid container spacing={1}>
-                                <Grid item xs={10} spacing={1}>
+                                <Grid item xs={10}>
                                     <AutoCompleteComp label='Area Name' value_list={cus_areas} label_field={'area_name'} value_field={'area_id'} value={area_id} onComboValueChange = {onAreaChange} required={true}/>
                                 </Grid>
-                                <Grid item xs={2} spacing={3}>
-                                    <Button onClick={toggleAreaModal} color="primary" size='small' className={classes.area_btn}>Add New Area</Button>
+                                <Grid item xs={2}>
+                                    <Button onClick={toggleAreaModal} color="primary" size='small' className={classes.area_btn} startIcon={<AddIcon />}>Add New Area</Button>
                                 </Grid>
                             </Grid>
                             <TextField value={phone} onChange={e=>setPhone(e.target.value)} label="Phone" fullWidth variant="outlined" className={classes.field} size="small"/>
