@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-import {Button, IconButton, Tooltip, Typography, Box}  from '@material-ui/core';
+import {Button, IconButton, Tooltip, Typography, Grid}  from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
@@ -14,9 +14,10 @@ import { message_atom } from '../utils/SnakbarComp';
 import SnakbarComp from '../utils/SnakbarComp';
 import {gridDate, gridDateTime} from '../utils/app_utils';
 import ExpenseTypeEntry from './expense_type_entry';
+import { AppStyles } from '../utils/app_styles';
 
 const ExpenseTypes = () => {
-
+    const appcls = AppStyles();
     const login_data = useRecoilValue(login_atom);
     const user_name = login_data.user_name;
 
@@ -103,33 +104,33 @@ const ExpenseTypes = () => {
     }
 
     const columns = [
-        { field: "expense_type_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
-        ,{ field: "", headerName: "Delete", renderCell: renderDeleteButton,  width: 120 }
-        ,{ field: 'expense_name', headerName: 'Expense', width: 180 }
-        ,{ field: 'comments', headerName: 'Description', width: 300 }
-        ,{ field: 'created_by', headerName: 'Created By', width: 200 }
-        ,{ field: 'created_on', headerName: 'Created On', width: 160, valueGetter: gridDateTime }
-        ,{ field: 'updated_by', headerName: 'Updated By', width: 200 }
-        ,{ field: 'updated_on', headerName: 'Updated On', width: 160, valueGetter: gridDateTime }
+        { field: "expense_type_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105, disableColumnMenu:true, headerClassName: appcls.data_grid_header}
+        ,{ field: "id", headerName: "Delete", renderCell: renderDeleteButton,  width: 120, disableColumnMenu:true, headerClassName: appcls.data_grid_header}
+        ,{ field: 'expense_name', headerName: 'Expense', width: 180, headerClassName: appcls.data_grid_header}
+        ,{ field: 'comments', headerName: 'Description', width: 300, headerClassName: appcls.data_grid_header}
+        ,{ field: 'created_by', headerName: 'Created By', width: 200, headerClassName: appcls.data_grid_header}
+        ,{ field: 'created_on', headerName: 'Created On', width: 160, valueGetter: gridDateTime, headerClassName: appcls.data_grid_header}
+        ,{ field: 'updated_by', headerName: 'Updated By', width: 200, headerClassName: appcls.data_grid_header}
+        ,{ field: 'updated_on', headerName: 'Updated On', width: 160, valueGetter: gridDateTime, headerClassName: appcls.data_grid_header}
         ];
 
-
+    const dialog_memo = useMemo(()=> <DialogComp show={openDia} onDialogClose={(ans)=> onDialogClose(ans)}/>, [openDia]);
+    
     return (
         <div>
             <SnakbarComp />
-            <Box display='flex' p={1} >
-                <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Expense Types</Typography></Box>
-                <Box p={1}>
-                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined" startIcon={<AddIcon />}> Add New Expense Type</Button>
-                </Box>
-            </Box>
+            <Grid container direction="row" justifyContent="space-between" alignItems="center" className={appcls.title_row}>
+                <Typography variant="h6"> Expense Types </Typography>
+                <Button type="button" onClick={onAddNewClick} size="small" color="primary" startIcon={<AddIcon />}> Add New </Button>
+            </Grid>
 
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid rows={expense_type_list} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]} rowHeight={30} headerHeight={32}/>
             </div>
 
             <ExpenseTypeEntry selected_expense_type={selected_expense_type} openExpenseTypeModal={openExpenseTypeModal} toggleExpenseTypeModal={toggleExpenseTypeModal} />
-            <DialogComp show={openDia} onDialogClose={(ans)=> onDialogClose(ans)}/>
+            
+            {dialog_memo}
                      
         </div>
     )

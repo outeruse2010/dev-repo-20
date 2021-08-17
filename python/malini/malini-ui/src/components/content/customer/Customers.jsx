@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-import {Button, Typography, Box}  from '@material-ui/core';
+import {Button, Typography, Grid}  from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import {customer_atom, act_customer_atom, fetch_customers, delete_customer} from './customer_api';
 
@@ -131,13 +131,12 @@ const Customers = () => {
 
     return (
         <div>
-            <Box display='flex' p={1} >
-                <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customers </Typography></Box>
-                <Box p={1}>
-                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined" startIcon={<AddIcon />}> Add New Customer</Button>
-                </Box>
-            </Box>
 
+            <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.title_row}>
+                <Typography variant="h6"> Customers </Typography>
+                <Button type="button" onClick={onAddNewClick} size="small" color="primary" startIcon={<AddIcon />}> Add New </Button>
+            </Grid>
+            
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid rows={rows} columns={columns} disableSelectionOnClick rowsPerPageOptions={[]} rowHeight={30} headerHeight={32} autoHeight={true}/>
             </div>

@@ -16,6 +16,7 @@ import { message_atom } from '../utils/SnakbarComp';
 import SnakbarComp from '../utils/SnakbarComp';
 import {gridDateTime} from '../utils/app_utils';
 import { AppStyles } from './../utils/app_styles';
+import { useMemo } from 'react';
 
 const CustomerArea = () => {
     const classes = AppStyles();
@@ -115,6 +116,8 @@ const CustomerArea = () => {
         ,{ field: 'updated_on', headerName: 'Updated On', width: 160, valueGetter: gridDateTime, headerClassName: classes.data_grid_header}
         ];
 
+    const dialog_memo = useMemo(()=> <DialogComp show={openDia} onDialogClose={(ans)=> onDialogClose(ans)}/>, [openDia]);
+
     return (
         <div>
             <SnakbarComp />
@@ -129,7 +132,7 @@ const CustomerArea = () => {
             </div>
 
             <CustomerAreaEntry selected_area={selected_area} openAreaModal={openAreaModal} toggleAreaModal={toggleAreaModal} />
-            <DialogComp show={openDia} onDialogClose={(ans)=> onDialogClose(ans)}/>
+            {dialog_memo}
                         
         </div>
     );

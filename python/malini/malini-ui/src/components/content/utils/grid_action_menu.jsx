@@ -3,7 +3,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Typography from '@material-ui/core/Typography';
 import SendIcon from '@material-ui/icons/Send';
 
@@ -42,8 +41,8 @@ const GridActionMenu = ({menu_items, row, onGirdMenuClick}) => {
       >
         {menu_items.map((menu_item) => (
           <MenuItem key={menu_item} onClick={()=>handleClose(menu_item)} size="small">
-            <ListItemIcon><SendIcon fontSize="small" color="primary"/></ListItemIcon>
-            <Typography variant="inherit">{menu_item}</Typography>
+            <SendIcon size='small' style={{marginRight:'10'}}/>
+            <Typography variant="inherit" >{menu_item}</Typography>
           </MenuItem>
         ))}
       </Menu>
