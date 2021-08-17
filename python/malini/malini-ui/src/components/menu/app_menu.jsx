@@ -15,12 +15,13 @@ import CustomerArea from '../content/customer/CustomerArea';
 import MenuDrawer from './menu_drawer';
 import {drawerWidth} from './menu_const';
 import ExpenseTypes from '../content/sale_expense/expense_types';
+import DailySaleExpense from '../content/sale_expense/daily_sale_expense';
 
 const menu_items = [  
   {"title": "Customer Area","component": CustomerArea, "path": "/customer_areas", "icon": "", "divide": false}
   ,{"title": "Customers","component": Customers, "path": "/", "icon": "", "divide": false}
-  ,{"title": "Due Detail","component": DueDetail, "path": "/due_detail", "icon": "", "divide": false}
   ,{"title": "Expense Types","component": ExpenseTypes, "path": "/expense_types", "icon": "", "divide": false}
+  ,{"title": "Daily Sale Expense","component": DailySaleExpense, "path": "/daily_sale_expense", "icon": "", "divide": false}
                     ];
 
 function AppMenu() {

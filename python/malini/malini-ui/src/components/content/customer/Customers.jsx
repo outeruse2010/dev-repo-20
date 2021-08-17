@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import {Button, Typography, Box}  from '@material-ui/core';
-
+import AddIcon from '@material-ui/icons/Add';
 import {customer_atom, act_customer_atom, fetch_customers, delete_customer} from './customer_api';
 
 import {login_atom} from '../login/login_api';
@@ -133,7 +133,7 @@ const Customers = () => {
             <Box display='flex' p={1} >
                 <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customers </Typography></Box>
                 <Box p={1}>
-                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined"> Add New Customer</Button>
+                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined" startIcon={<AddIcon />}> Add New Customer</Button>
                 </Box>
             </Box>
 

@@ -26,10 +26,14 @@ const AutoCompleteComp = ({label,value_list, label_field, value_field, value, on
             options={option_list}
             classes={{ option: classes.option}}
             autoHighlight
-            getOptionLabel={(option) => option.label}
+            getOptionLabel={(option) => option.label ? option.label : '' }
             value={selected_value}
-            onChange={(event, newValue) => {onComboValueChange(newValue.value);}}
-            
+            onChange={(event, newValue) => {
+                    let v = (newValue && newValue.value)? newValue.value: '';
+                    onComboValueChange(v);
+                }
+            }
+
             renderInput={(params) => (
                 <TextField
                 {...params}

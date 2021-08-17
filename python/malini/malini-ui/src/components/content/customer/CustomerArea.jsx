@@ -3,6 +3,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import {Button, IconButton, Tooltip, Typography, Box}  from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
 import CustomerAreaEntry from './CustomerAreaEntry';
 import {cus_area_atom, act_cus_area_atom, fetch_customer_areas, delete_cus_area} from './customer_api';
 
@@ -118,7 +119,7 @@ const CustomerArea = () => {
             <Box display='flex' p={1} >
                 <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customer Areas </Typography></Box>
                 <Box p={1}>
-                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined"> Add New Area</Button>
+                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined" startIcon={<AddIcon />}> Add New Area</Button>
                 </Box>
             </Box>
 

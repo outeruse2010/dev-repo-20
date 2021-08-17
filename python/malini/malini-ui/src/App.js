@@ -9,7 +9,8 @@ const theme = createTheme({
     type: 'light'
   },
   typography: {
-    allVariants:{color: '#7c4dff'}
+    allVariants:{color: '#7c4dff'},
+    fontSize: 12
   }
 });
 
