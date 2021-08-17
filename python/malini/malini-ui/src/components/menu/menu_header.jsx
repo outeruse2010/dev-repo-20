@@ -5,6 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import PersonIcon from '@material-ui/icons/Person';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import {drawerWidth} from './menu_const';
@@ -22,21 +23,14 @@ function MenuHeader ({onMenuIconClick, open}) {
     const classes = useStyles();
     return (
         <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: open, })} >
-        <Toolbar>
-          <Grid container spacing={1}>
-            <Grid item xs={3}>
-              {success && 
+        <Toolbar>         
+            <Grid container direction="row" justifyContent="space-between" alignItems="center" >
+                {success && 
                 <IconButton  onClick={() => onMenuIconClick()} color="inherit" aria-label="open drawer"  edge="start" className={clsx(classes.menuButton, open && classes.hide)} >
-                  <MenuIcon />
-                </IconButton>}
+                  <MenuIcon /></IconButton>}
+                  <Typography variant="h6" noWrap className={classes.title_color}> Malini </Typography>
+                  {success && <Typography variant="h6" noWrap className={classes.title_color}><PersonIcon /> {user_name} </Typography>}
             </Grid>
-            <Grid item xs={6}>
-                <Typography variant="h6" noWrap className={classes.title_color}> Malini </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="h6" noWrap className={classes.title_color}> {user_name} </Typography>
-            </Grid>
-          </Grid>
         </Toolbar>
       </AppBar>
     );

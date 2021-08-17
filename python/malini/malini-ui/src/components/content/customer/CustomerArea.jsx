@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import {Button, IconButton, Tooltip, Typography, Box}  from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
@@ -14,9 +15,10 @@ import DialogComp from '../utils/DialogComp';
 import { message_atom } from '../utils/SnakbarComp';
 import SnakbarComp from '../utils/SnakbarComp';
 import {gridDateTime} from '../utils/app_utils';
+import { AppStyles } from './../utils/app_styles';
 
 const CustomerArea = () => {
-
+    const classes = AppStyles();
     const login_data = useRecoilValue(login_atom);
     const user_name = login_data.user_name;
 
@@ -103,25 +105,24 @@ const CustomerArea = () => {
     }
 
     const columns = [
-        { field: "area_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105}
-        ,{ field: "", headerName: "Delete", renderCell: renderDeleteButton,  width: 120 }
-        ,{ field: 'area_name', headerName: 'Area', width: 180 }
-        ,{ field: 'description', headerName: 'Description', width: 300 }
-        ,{ field: 'created_by', headerName: 'Created By', width: 200 }
-        ,{ field: 'created_on', headerName: 'Created On', width: 160, valueGetter: gridDateTime }
-        ,{ field: 'updated_by', headerName: 'Updated By', width: 200 }
-        ,{ field: 'updated_on', headerName: 'Updated On', width: 160, valueGetter: gridDateTime }
+        { field: "area_id", headerName: "Edit", renderCell: renderEditButton ,  width: 105, disableColumnMenu:true, headerClassName: classes.data_grid_header}
+        ,{ field: "id", headerName: "Delete", renderCell: renderDeleteButton,  width: 120,  disableColumnMenu:true, headerClassName: classes.data_grid_header}
+        ,{ field: 'area_name', headerName: 'Area', width: 180, headerClassName: classes.data_grid_header}
+        ,{ field: 'description', headerName: 'Description', width: 300, headerClassName: classes.data_grid_header}
+        ,{ field: 'created_by', headerName: 'Created By', width: 200, headerClassName: classes.data_grid_header}
+        ,{ field: 'created_on', headerName: 'Created On', width: 160, valueGetter: gridDateTime, headerClassName: classes.data_grid_header}
+        ,{ field: 'updated_by', headerName: 'Updated By', width: 200, headerClassName: classes.data_grid_header}
+        ,{ field: 'updated_on', headerName: 'Updated On', width: 160, valueGetter: gridDateTime, headerClassName: classes.data_grid_header}
         ];
 
     return (
         <div>
             <SnakbarComp />
-            <Box display='flex' p={1} >
-                <Box p={1} flexGrow={1}><Typography variant="h6" noWrap > Customer Areas </Typography></Box>
-                <Box p={1}>
-                <Button type="button" onClick={onAddNewClick} size="small" color="primary" variant="outlined" startIcon={<AddIcon />}> Add New Area</Button>
-                </Box>
-            </Box>
+
+            <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.title_row}>
+                <Typography variant="h6"> Customer Areas </Typography>
+                <Button type="button" onClick={onAddNewClick} size="small" color="primary" startIcon={<AddIcon />}> Add New Area</Button>
+            </Grid>
 
             <div style={{ height: 500, width: '100%' }}>
                 <DataGrid rows={cus_area_list} columns={columns}   disableSelectionOnClick rowsPerPageOptions={[]} rowHeight={30} headerHeight={32}/>
@@ -135,6 +136,3 @@ const CustomerArea = () => {
 }
 
 export default CustomerArea;
-
-
-

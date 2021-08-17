@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import {Button, Typography, Box}  from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -15,8 +14,11 @@ import CustomerEntry from './CustomerEntry';
 import { gridDateTime } from '../utils/app_utils';
 import GridActionMenu from '../utils/grid_action_menu';
 import DueDetail from '../dues/due_detail';
+import { AppStyles } from './../utils/app_styles';
 
 const Customers = () => {
+    const classes = AppStyles();
+
     const login_data = useRecoilValue(login_atom);
     const user_name = login_data.user_name;
 
@@ -85,7 +87,6 @@ const Customers = () => {
         setSelected_customer(row);
         switch (menu_item) {
             case cus_grid_menus[0]: //Edit
-                // onEditClick();
                 setOpenCustomerModal(true);
                 break;
             case cus_grid_menus[1]: //Delete
@@ -111,21 +112,21 @@ const Customers = () => {
     const rows = useRecoilValue(customer_atom);
 
     const columns = [
-        { field: "", headerName: "", renderCell: renderGridMenuButton, width: 20 }
-        ,{ field: 'cus_sr', headerName: 'Serial', width: 115 }
-        ,{ field: 'full_name', headerName: 'Name', width: 200 }
-        ,{ field: 'area_name', headerName: 'Location', width: 200 }
-        ,{ field: 'total_due', headerName: 'Due (Rs.)', width: 160 }
-        ,{ field: 'total_mkt_amount', headerName: 'Marketing (Rs.)', width: 160 }
-        ,{ field: 'total_credit_amt', headerName: 'Paid (Rs.)', width: 160 }
-        ,{ field: 'address', headerName: 'Address', width: 200 }
-        ,{ field: 'email', headerName: 'Email', width: 150 }
-        ,{ field: 'phone', headerName: 'Phone', width: 200 }
-        ,{ field: 'comments', headerName: 'Comments', width: 200 }
-        ,{ field: 'created_by', headerName: 'Created By', width: 160 }
-        ,{ field: 'created_on', headerName: 'Created On', width: 160, valueGetter: gridDateTime }
-        ,{ field: 'updated_by', headerName: 'Updated By', width: 160 }
-        ,{ field: 'updated_on', headerName: 'Updated On', width: 160, valueGetter: gridDateTime }
+        { field: "", headerName: "", renderCell: renderGridMenuButton, width: 20 , disableColumnMenu:true, headerClassName: classes.data_grid_header}
+        ,{ field: 'cus_sr', headerName: 'Serial', width: 115, headerClassName: classes.data_grid_header}
+        ,{ field: 'full_name', headerName: 'Name', width: 200, headerClassName: classes.data_grid_header}
+        ,{ field: 'area_name', headerName: 'Location', width: 200, headerClassName: classes.data_grid_header}
+        ,{ field: 'total_due', headerName: 'Due (Rs.)', width: 160, headerClassName: classes.data_grid_header}
+        ,{ field: 'total_mkt_amount', headerName: 'Marketing (Rs.)', width: 160, headerClassName: classes.data_grid_header}
+        ,{ field: 'total_credit_amt', headerName: 'Paid (Rs.)', width: 160, headerClassName: classes.data_grid_header}
+        ,{ field: 'address', headerName: 'Address', width: 200, headerClassName: classes.data_grid_header}
+        ,{ field: 'email', headerName: 'Email', width: 150, headerClassName: classes.data_grid_header}
+        ,{ field: 'phone', headerName: 'Phone', width: 200, headerClassName: classes.data_grid_header}
+        ,{ field: 'comments', headerName: 'Comments', width: 200, headerClassName: classes.data_grid_header}
+        ,{ field: 'created_by', headerName: 'Created By', width: 160, headerClassName: classes.data_grid_header}
+        ,{ field: 'created_on', headerName: 'Created On', width: 160, valueGetter: gridDateTime, headerClassName: classes.data_grid_header}
+        ,{ field: 'updated_by', headerName: 'Updated By', width: 160, headerClassName: classes.data_grid_header}
+        ,{ field: 'updated_on', headerName: 'Updated On', width: 160, valueGetter: gridDateTime, headerClassName: classes.data_grid_header}
         ];
 
     return (
@@ -151,19 +152,3 @@ const Customers = () => {
 }
 
 export default Customers;
-
-const useStyles = makeStyles((theme) => ({
-    modal: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow:'scroll',
-      marginTop: 10,
-      marginBottom: 5
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
-    }
-  }));
