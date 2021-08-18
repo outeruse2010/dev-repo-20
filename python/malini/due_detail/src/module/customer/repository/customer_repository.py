@@ -24,7 +24,7 @@ def customers():
     log.info(f'customers no of rows and columns selected : {df.shape}')
     return df
 
-def fetch_customer_dues():
+def fetch_customer_dues(input={}):
     log.info('fetch_customer_dues....')
     sql = f''' SELECT cast(c.cus_id as varchar) id, cast(c.cus_id as varchar) cus_id, 
             c.cus_sr, c.first_name, c.mid_name, c.last_name,concat(c.first_name,' ', c.mid_name,' ', c.last_name) full_name ,c.address, 
@@ -39,7 +39,8 @@ def fetch_customer_dues():
     engine = db_engine()
     df = pd.read_sql(con=engine, sql=sql)
     log.info(f'customers no of rows and columns selected : {df.shape}')
-    return df
+    rs_json = df.to_json(orient="records")
+    return rs_json
 
 
 def add_customer(cus_json):

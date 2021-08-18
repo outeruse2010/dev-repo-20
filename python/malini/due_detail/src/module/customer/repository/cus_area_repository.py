@@ -13,7 +13,7 @@ from src.config.log_config import log
 from src.constants.app_const import *
 
 
-def customer_areas():
+def customer_areas(input={}):
     log.info('find customer_areas....')
     engine = db_engine()
     sql = f''' SELECT cast(area_id as varchar) id, cast(area_id as varchar) area_id, area_name, description, 
@@ -22,7 +22,8 @@ def customer_areas():
                where deleted = 'N' order by created_on desc '''
     df = pd.read_sql(con=engine, sql=sql)
     log.info(f'customer_areas no of rows selected : {df.shape[0]}')
-    return df
+    rs_json = df.to_json(orient="records")
+    return rs_json
 
 def add_customer_area(cus_area_json):
     log.info(f'add_customer_area....{cus_area_json}')

@@ -59,8 +59,10 @@ CREATE TABLE malini_schema.user_activity(
    user_id uuid,
    user_name text,
    activity_type text not null,
-   activity_status char(1) not null,
+   activity_status text not null,
    activity_time timestamp default now(),
+   host_name text,
+   os_name text,
    comments text
 );
 

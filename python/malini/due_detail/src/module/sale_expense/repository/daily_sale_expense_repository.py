@@ -12,7 +12,7 @@ from src.config.db_config import db_engine
 from src.config.log_config import log
 from src.constants.app_const import *
 
-def daily_sale_expenses():
+def daily_sale_expenses(input={}):
     log.info('find daily_sale_expenses....')
     engine = db_engine()
     sql = f''' SELECT cast(se.sale_expense_id as varchar) sale_expense_id, cast(se.sale_expense_id as varchar) id, 
@@ -24,7 +24,8 @@ def daily_sale_expenses():
 
     df = pd.read_sql(con=engine, sql=sql)
     log.info(f'daily_sale_expenses no of rows selected : {df.shape[0]}')
-    return df
+    rs_json = df.to_json(orient="records")
+    return rs_json
 
 
 def add_daily_sale_expense(exp_sale_json):

@@ -42,6 +42,7 @@ const UserLogin = () => {
             // console.log('***log_in_code: ',log_in_code);
             Cookies.set('log_in_code',log_in_code);
             Cookies.set('user_id',data.user_id);
+            Cookies.set('user_name',user_name);
             setAct_message({'status': data.status, 'message': data.message});        
         });
 

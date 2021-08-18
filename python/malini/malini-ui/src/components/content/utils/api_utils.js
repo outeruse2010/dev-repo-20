@@ -38,6 +38,10 @@ export const post_request = (url, json_input = {}) =>{
     headers.append('Content-Type', 'application/json');
     json_input['log_in_code'] = Cookies.get('log_in_code');
     json_input['user_id'] = Cookies.get('user_id');
+    if(Cookies.get('user_name')){
+      json_input['user_name'] = Cookies.get('user_name');
+    }
+    
     headers.append('set-cookie', 'log_in_code=Test1');    
 
     const api = api_url(url);

@@ -47,52 +47,33 @@ app.add_url_rule('/graphql_cus_area_list', view_func= GraphQLView.as_view('grapg
 
 from src.module.customer.repository.cus_area_repository import *
 
-def is_authorised(check):
-    def validate():
-        input = request.get_json()
-        access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-        print(f'*****access_json: {access_json}')
-        if not access_json['allowed']:
-            return access_json
-        return check
-    return validate
-
 @app.route("/fetch_customer_areas",  methods=['POST'])
-# @is_authorised
 def fetch_customer_areas():
     input = request.get_json()
-    # log_in_code = request.cookies.get('log_in_code')
-    # print(f'*****cookie: {log_in_code}')
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    # access_json = {'message': "msg", 'allowed': False, 'status': ERROR}
-    if not access_json['allowed']:
-        return access_json
-    df = customer_areas()
-    json_data = df.to_json(orient="records")
-    return json_data
-
-
+    res = perform_request(input, 'fetch_customer_areas', customer_areas)
+    return res
 
 
 @app.route("/add_customer_area", methods=['POST'])
 def new_cus_area():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    trim_json(input, ['user_id', 'log_in_code'])
+    res = perform_request(input, 'add_customer_area', add_customer_area)
+    return res
 
-    return add_customer_area(input)
 
 @app.route("/update_customer_area", methods=['POST'])
 def update_cus_area():
-    cus_area_json = request.get_json()
-    return update_customer_area(cus_area_json)
+    input = request.get_json()
+    res = perform_request(input, 'update_customer_area', update_customer_area)
+    return res
+
 
 @app.route("/remove_customer_area", methods=['POST'])
 def remove_cus_area():
-    cus_area_json = request.get_json()
-    return delete_customer_area(cus_area_json)
+    input = request.get_json()
+    res = perform_request(input, 'remove_customer_area', delete_customer_area)
+    return res
+
 
 # =============== customer detail Api localhost:5000/graphql_customer_list    =====================
 # query to run on graphiql
@@ -105,37 +86,29 @@ from src.module.customer.repository.customer_repository import *
 @app.route("/fetch_customers",  methods=['POST'])
 def fetch_customers():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    df = fetch_customer_dues()
-    json_data = df.to_json(orient="records")
-    return json_data
+    res = perform_request(input, 'fetch_customers', fetch_customer_dues)
+    return res
+
 
 @app.route("/add_customer",  methods=['POST'])
 def new_customer():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    trim_json(input, ['user_id', 'log_in_code'])
-    return add_customer(input)
+    res = perform_request(input, 'add_customer', add_customer)
+    return res
 
 @app.route("/update_customer",  methods=['POST'])
 def update_customer_info():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    return update_customer(input)
+    res = perform_request(input, 'update_customer', update_customer)
+    return res
+
 
 @app.route("/remove_customer", methods=['POST'])
 def remove_customer():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    return delete_customer(input)
+    res = perform_request(input, 'remove_customer', delete_customer)
+    return res
+
 
 # =============== customer due detail     =====================
 
@@ -144,37 +117,28 @@ from src.module.due_detail.repository.cus_due_repository import *
 @app.route("/fetch_customer_dues",  methods=['POST'])
 def find_customer_dues():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    df = fetch_due_detail_by_cus_id(input['cus_id'])
-    json_data = df.to_json(orient="records")
-    return json_data
+    res = perform_request(input, 'fetch_customer_dues', fetch_due_detail_by_cus_id)
+    return res
 
 @app.route("/add_customer_due",  methods=['POST'])
 def add_customer_due():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    trim_json(input, ['user_id', 'log_in_code'])
-    return add_due_amount(input)
+    res = perform_request(input, 'add_customer_due', add_due_amount)
+    return res
+
 
 @app.route("/update_customer_due",  methods=['POST'])
 def update_customer_due():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    return update_due_amount(input)
+    res = perform_request(input, 'update_customer_due', update_due_amount)
+    return res
+
 
 @app.route("/remove_customer_due", methods=['POST'])
 def remove_customer_due():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    return delete_due_amount(input)
+    res = perform_request(input, 'remove_customer_due', delete_due_amount)
+    return res
 
 
 # =============== expense type detail     =====================
@@ -184,39 +148,28 @@ from src.module.sale_expense.repository.expense_type_repository import *
 @app.route("/fetch_expense_types",  methods=['POST'])
 def fetch_expense_types():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    df = expense_types()
-    json_data = df.to_json(orient="records")
-    return json_data
-
+    res = perform_request(input, 'fetch_expense_types', expense_types)
+    return res
 
 @app.route("/new_expense_type",  methods=['POST'])
 def add_new_expense_type():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    trim_json(input, ['user_id', 'log_in_code'])
-    return add_expense_type(input)
+    res = perform_request(input, 'new_expense_type', add_expense_type)
+    return res
 
 
 @app.route("/update_expense_type",  methods=['POST'])
 def update_existing_expense_type():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    return update_expense_type(input)
+    res = perform_request(input, 'update_expense_type', update_expense_type)
+    return res
+
 
 @app.route("/remove_expense_type", methods=['POST'])
 def remove_expense_type():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    return delete_expense_type(input)
+    res = perform_request(input, 'remove_expense_type', delete_expense_type)
+    return res
 
 
 # =============== sale expense detail     =====================
@@ -226,39 +179,62 @@ from src.module.sale_expense.repository.daily_sale_expense_repository import *
 @app.route("/fetch_daily_sale_expenses",  methods=['POST'])
 def fetch_daily_sale_expenses():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    df = daily_sale_expenses()
-    json_data = df.to_json(orient="records")
-    return json_data
+    res = perform_request(input, 'fetch_daily_sale_expenses', daily_sale_expenses)
+    return res
 
 
 @app.route("/new_daily_sale_expense",  methods=['POST'])
 def add_new_daily_sale_expense():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [VIEW, UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    trim_json(input, ['user_id', 'log_in_code'])
-    return add_daily_sale_expense(input)
+    res = perform_request(input, 'new_daily_sale_expense', add_daily_sale_expense)
+    return res
 
 
 @app.route("/update_daily_sale_expense",  methods=['POST'])
 def update_existing_daily_sale_expense():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
-    if not access_json['allowed']:
-        return access_json
-    return update_daily_sale_expense(input)
+    res = perform_request(input, 'update_daily_sale_expense', update_daily_sale_expense)
+    return res
+
 
 @app.route("/remove_daily_sale_expense", methods=['POST'])
 def remove_daily_sale_expense():
     input = request.get_json()
-    access_json = allowed_to_do(input['user_id'], input['log_in_code'], [UPDATE])
+    res = perform_request(input, 'remove_daily_sale_expense', delete_daily_sale_expense)
+    return res
+
+
+# ***********************user activity *********************
+
+def check_authentication(input, roles):
+    access_json = allowed_to_do(input['user_id'], input['log_in_code'], roles)
     if not access_json['allowed']:
-        return access_json
-    return delete_daily_sale_expense(input)
+        raise PermissionError(access_json['message'])
+
+import socket
+import platform
+
+def perform_request(input, api_name, callback_fun, comments=''):
+    user_id = input["user_id"]
+    user_name = input["user_name"]
+    res = {}
+    status = SUCCESS
+    try:
+        check_authentication(input, [UPDATE])
+        trim_json(input, ['user_id', 'log_in_code', 'user_name'])
+        res = callback_fun(input)
+    except Exception as e:
+        status = ERROR
+        res['status'] = ERROR
+        res['message'] = str(e)
+        traceback.print_exc()
+    actv_json = {"user_id": user_id, "user_name": user_name,
+                 "activity_type": api_name, "activity_status": status,
+                 "host_name": socket.gethostname(),
+                 "os_name": platform.system() + ' ' + platform.release(), "comments": comments}
+    add_user_activity(actv_json)
+    return res
+
 
 if __name__ == '__main__':
     app.run(debug=True)

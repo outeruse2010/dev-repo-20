@@ -15,7 +15,8 @@ from src.constants.app_const import *
 # SELECT cus_due_id, cus_id, mkt_amount, credit_amt,  "comments", created_on, created_by, updated_on, updated_by, deleted
 # FROM malini_schema.cus_due;
 
-def fetch_due_detail_by_cus_id(cus_id):
+def fetch_due_detail_by_cus_id(input):
+    cus_id = input['cus_id']
     log.info('fetch_due_detail')
     engine = db_engine()
     sql = f'''SELECT cast(cus_due_id as varchar) id, cast(cus_due_id as varchar) cus_due_id, 
@@ -23,14 +24,8 @@ def fetch_due_detail_by_cus_id(cus_id):
              comments, created_on, created_by, updated_on, updated_by, deleted 
              FROM {DB_SCHEMA}.cus_due WHERE cus_id = '{cus_id}' and deleted='N' '''
     df = pd.read_sql_query(con=engine, sql=sql)
-
-    # active_due_rows_df = df.loc[df['deleted']=='N', ['mkt_amount', 'credit_amt']]
-    # total_mkt_amount = active_due_rows_df['mkt_amount'].sum()
-    # total_credit_amt = active_due_rows_df['credit_amt'].sum()
-    # total_due = total_mkt_amount - total_credit_amt
-    # log.info(f'cus_id: [{cus_id}], total_due: [{total_due}]')
-
-    return df
+    rs_json = df.to_json(orient="records")
+    return rs_json
 
 def add_due_amount(due_json):
     log.info('add_due_amount')

@@ -13,7 +13,7 @@ from src.config.log_config import log
 from src.constants.app_const import *
 
 
-def expense_types():
+def expense_types(input={}):
     log.info('find expense_types....')
     engine = db_engine()
     sql = f''' SELECT cast(expense_type_id as varchar) expense_type_id,cast(expense_type_id as varchar) id, expense_name, 
@@ -22,7 +22,8 @@ def expense_types():
                where deleted = 'N' order by created_on desc '''
     df = pd.read_sql(con=engine, sql=sql)
     log.info(f'expense_types no of rows selected : {df.shape[0]}')
-    return df
+    rs_json = df.to_json(orient="records")
+    return rs_json
 
 def add_expense_type(expense_type_json):
     log.info(f'add_expense_type....{expense_type_json}')
