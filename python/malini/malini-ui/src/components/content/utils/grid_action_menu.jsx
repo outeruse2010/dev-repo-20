@@ -6,7 +6,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Typography from '@material-ui/core/Typography';
 import SendIcon from '@material-ui/icons/Send';
 
-const ITEM_HEIGHT = 48;
+const ITEM_HEIGHT = 30;
 
 const GridActionMenu = ({menu_items, row, onGirdMenuClick}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -41,7 +41,7 @@ const GridActionMenu = ({menu_items, row, onGirdMenuClick}) => {
       >
         {menu_items.map((menu_item) => (
           <MenuItem key={menu_item} onClick={()=>handleClose(menu_item)} size="small">
-            <SendIcon size='small' style={{marginRight:'10'}}/>
+            <SendIcon size='small'/><MoreVertIcon size="small" color="disabled"/>
             <Typography variant="inherit" >{menu_item}</Typography>
           </MenuItem>
         ))}

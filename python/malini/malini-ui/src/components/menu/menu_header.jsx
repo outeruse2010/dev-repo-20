@@ -28,8 +28,8 @@ function MenuHeader ({onMenuIconClick, open}) {
                 {success && 
                 <IconButton  onClick={() => onMenuIconClick()} color="inherit" aria-label="open drawer"  edge="start" className={clsx(classes.menuButton, open && classes.hide)} >
                   <MenuIcon /></IconButton>}
-                  <Typography variant="h6" noWrap className={classes.title_color}> Malini </Typography>
-                  {success && <Typography variant="h6" noWrap className={classes.title_color}><PersonIcon /> {user_name} </Typography>}
+                  <Typography variant="h3" noWrap className={classes.title_color}> Malini </Typography>
+                  {success && <div><PersonIcon /><Typography noWrap className={classes.title_color}> {user_name} </Typography></div>}
             </Grid>
         </Toolbar>
       </AppBar>
