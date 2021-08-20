@@ -1,5 +1,5 @@
 # ********************************
-# * Project : due_detail
+# * Project : malini-py
 # * File :  cus_due_repository.py
 # * Created by Malancha at 9/8/2021
 # ********************************

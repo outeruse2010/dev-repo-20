@@ -1,5 +1,5 @@
 # ********************************
-# * Project : due_detail
+# * Project : malini-py
 # * File :  db_config.py
 # * Created by Malancha at 19/7/2021
 # ********************************

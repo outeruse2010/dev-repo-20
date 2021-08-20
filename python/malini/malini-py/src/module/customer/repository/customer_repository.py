@@ -1,5 +1,5 @@
 # ********************************
-# * Project : due_detail
+# * Project : malini-py
 # * File :  customer_repository.py
 # * Created by Malancha at 28/7/2021
 # ********************************
