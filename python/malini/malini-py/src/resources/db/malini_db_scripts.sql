@@ -21,6 +21,8 @@ CREATE TABLE malini_schema.user_list(
    UNIQUE(user_name)
 );
 
+INSERT INTO malini_schema.user_list(user_name, user_pass, created_by) VALUES('Malini', 'malini',  'Auto');
+
 --drop TABLE malini_schema.malini_roles;
 CREATE TABLE malini_schema.malini_roles(
    role_name text not null,
@@ -32,6 +34,11 @@ CREATE TABLE malini_schema.malini_roles(
    deleted char(1) default 'N',
    PRIMARY KEY(role_name)
 );
+
+delete from malini_schema.malini_roles;
+INSERT INTO malini_schema.malini_roles (role_name, description,created_by) VALUES('view', 'user can only view','Auto');
+INSERT INTO malini_schema.malini_roles (role_name, description,created_by) VALUES('update', 'user can update and view','Auto');
+
 
 --drop TABLE malini_schema.user_role_map;
 CREATE TABLE malini_schema.user_role_map(
@@ -45,6 +52,10 @@ CREATE TABLE malini_schema.user_role_map(
    deleted char(1) default 'N',
    PRIMARY KEY(user_id,role_name)
 );
+
+INSERT INTO malini_schema.user_role_map (user_id, role_name, created_by)
+VALUES((select user_id from malini_schema.user_list where user_name='Malini'), 'update', 'Auto');
+
 
 --drop TABLE malini_schema.log_in_detail;
 CREATE TABLE malini_schema.log_in_detail(

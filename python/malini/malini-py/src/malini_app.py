@@ -15,7 +15,7 @@ CORS(app)
 
 @app.route('/', methods=['GET'])
 def test():
-    return 'Hello World!!!'
+    return 'Malini application has started !!!'
 
 from src.module.activity.user_repository import *
 
@@ -50,28 +50,28 @@ from src.module.customer.repository.cus_area_repository import *
 @app.route("/fetch_customer_areas",  methods=['POST'])
 def fetch_customer_areas():
     input = request.get_json()
-    res = perform_request(input, 'fetch_customer_areas', customer_areas)
+    res = perform_request(input, 'fetch_customer_areas',[UPDATE,VIEW], customer_areas)
     return res
 
 
 @app.route("/add_customer_area", methods=['POST'])
 def new_cus_area():
     input = request.get_json()
-    res = perform_request(input, 'add_customer_area', add_customer_area)
+    res = perform_request(input, 'add_customer_area',[UPDATE], add_customer_area)
     return res
 
 
 @app.route("/update_customer_area", methods=['POST'])
 def update_cus_area():
     input = request.get_json()
-    res = perform_request(input, 'update_customer_area', update_customer_area)
+    res = perform_request(input, 'update_customer_area',[UPDATE], update_customer_area)
     return res
 
 
 @app.route("/remove_customer_area", methods=['POST'])
 def remove_cus_area():
     input = request.get_json()
-    res = perform_request(input, 'remove_customer_area', delete_customer_area)
+    res = perform_request(input, 'remove_customer_area',[UPDATE], delete_customer_area)
     return res
 
 
@@ -86,27 +86,27 @@ from src.module.customer.repository.customer_repository import *
 @app.route("/fetch_customers",  methods=['POST'])
 def fetch_customers():
     input = request.get_json()
-    res = perform_request(input, 'fetch_customers', fetch_customer_dues)
+    res = perform_request(input, 'fetch_customers',[UPDATE,VIEW], fetch_customer_dues)
     return res
 
 
 @app.route("/add_customer",  methods=['POST'])
 def new_customer():
     input = request.get_json()
-    res = perform_request(input, 'add_customer', add_customer)
+    res = perform_request(input, 'add_customer',[UPDATE], add_customer)
     return res
 
 @app.route("/update_customer",  methods=['POST'])
 def update_customer_info():
     input = request.get_json()
-    res = perform_request(input, 'update_customer', update_customer)
+    res = perform_request(input, 'update_customer',[UPDATE], update_customer)
     return res
 
 
 @app.route("/remove_customer", methods=['POST'])
 def remove_customer():
     input = request.get_json()
-    res = perform_request(input, 'remove_customer', delete_customer)
+    res = perform_request(input, 'remove_customer',[UPDATE], delete_customer)
     return res
 
 
@@ -117,27 +117,27 @@ from src.module.due_detail.repository.cus_due_repository import *
 @app.route("/fetch_customer_dues",  methods=['POST'])
 def find_customer_dues():
     input = request.get_json()
-    res = perform_request(input, 'fetch_customer_dues', fetch_due_detail_by_cus_id)
+    res = perform_request(input, 'fetch_customer_dues',[UPDATE,VIEW], fetch_due_detail_by_cus_id)
     return res
 
 @app.route("/add_customer_due",  methods=['POST'])
 def add_customer_due():
     input = request.get_json()
-    res = perform_request(input, 'add_customer_due', add_due_amount)
+    res = perform_request(input, 'add_customer_due',[UPDATE], add_due_amount)
     return res
 
 
 @app.route("/update_customer_due",  methods=['POST'])
 def update_customer_due():
     input = request.get_json()
-    res = perform_request(input, 'update_customer_due', update_due_amount)
+    res = perform_request(input, 'update_customer_due',[UPDATE], update_due_amount)
     return res
 
 
 @app.route("/remove_customer_due", methods=['POST'])
 def remove_customer_due():
     input = request.get_json()
-    res = perform_request(input, 'remove_customer_due', delete_due_amount)
+    res = perform_request(input, 'remove_customer_due',[UPDATE], delete_due_amount)
     return res
 
 
@@ -148,27 +148,27 @@ from src.module.sale_expense.repository.expense_type_repository import *
 @app.route("/fetch_expense_types",  methods=['POST'])
 def fetch_expense_types():
     input = request.get_json()
-    res = perform_request(input, 'fetch_expense_types', expense_types)
+    res = perform_request(input, 'fetch_expense_types',[UPDATE,VIEW], expense_types)
     return res
 
 @app.route("/new_expense_type",  methods=['POST'])
 def add_new_expense_type():
     input = request.get_json()
-    res = perform_request(input, 'new_expense_type', add_expense_type)
+    res = perform_request(input, 'new_expense_type',[UPDATE], add_expense_type)
     return res
 
 
 @app.route("/update_expense_type",  methods=['POST'])
 def update_existing_expense_type():
     input = request.get_json()
-    res = perform_request(input, 'update_expense_type', update_expense_type)
+    res = perform_request(input, 'update_expense_type',[UPDATE], update_expense_type)
     return res
 
 
 @app.route("/remove_expense_type", methods=['POST'])
 def remove_expense_type():
     input = request.get_json()
-    res = perform_request(input, 'remove_expense_type', delete_expense_type)
+    res = perform_request(input, 'remove_expense_type',[UPDATE], delete_expense_type)
     return res
 
 
@@ -179,28 +179,28 @@ from src.module.sale_expense.repository.daily_sale_expense_repository import *
 @app.route("/fetch_daily_sale_expenses",  methods=['POST'])
 def fetch_daily_sale_expenses():
     input = request.get_json()
-    res = perform_request(input, 'fetch_daily_sale_expenses', daily_sale_expenses)
+    res = perform_request(input, 'fetch_daily_sale_expenses',[UPDATE, VIEW], daily_sale_expenses)
     return res
 
 
 @app.route("/new_daily_sale_expense",  methods=['POST'])
 def add_new_daily_sale_expense():
     input = request.get_json()
-    res = perform_request(input, 'new_daily_sale_expense', add_daily_sale_expense)
+    res = perform_request(input, 'new_daily_sale_expense',[UPDATE], add_daily_sale_expense)
     return res
 
 
 @app.route("/update_daily_sale_expense",  methods=['POST'])
 def update_existing_daily_sale_expense():
     input = request.get_json()
-    res = perform_request(input, 'update_daily_sale_expense', update_daily_sale_expense)
+    res = perform_request(input, 'update_daily_sale_expense',[UPDATE], update_daily_sale_expense)
     return res
 
 
 @app.route("/remove_daily_sale_expense", methods=['POST'])
 def remove_daily_sale_expense():
     input = request.get_json()
-    res = perform_request(input, 'remove_daily_sale_expense', delete_daily_sale_expense)
+    res = perform_request(input, 'remove_daily_sale_expense',[UPDATE], delete_daily_sale_expense)
     return res
 
 
@@ -214,13 +214,13 @@ def check_authentication(input, roles):
 import socket
 import platform
 
-def perform_request(input, api_name, callback_fun, comments=''):
+def perform_request(input, api_name, roles, callback_fun, comments=''):
     user_id = input["user_id"]
     user_name = input["user_name"]
     res = {}
     status = SUCCESS
     try:
-        check_authentication(input, [UPDATE])
+        check_authentication(input, roles)
         trim_json(input, ['user_id', 'log_in_code', 'user_name'])
         res = callback_fun(input)
     except Exception as e:
